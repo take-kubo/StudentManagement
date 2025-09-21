@@ -1,5 +1,6 @@
 package raisetech.StudentManagement;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class StudentManagementApplication {
 	@GetMapping("/studentInfo2")
 	public String getStudentInfo2() {
 				return studentMap.entrySet().stream()
-				.sorted(Map.Entry.comparingByKey(new MixedCharacterComparator()))
+				.sorted(Map.Entry.comparingByKey(Comparator.nullsLast(new MixedCharacterComparator())))
 				.map(s -> s.getKey() + " is " + s.getValue() + " years old.")
 				.collect(Collectors.joining("\n"));
 	}
