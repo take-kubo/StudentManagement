@@ -42,9 +42,9 @@ public class StudentManagementApplication {
 	/* 課題：より複雑なものにチャレンジする（Mapを使うなど） */
 	@GetMapping("/studentInfo2")
 	public String getStudentInfo2() {
-		return studentMap.entrySet().stream()
+				return studentMap.entrySet().stream()
+				.sorted(Map.Entry.comparingByKey())
 				.map(s -> s.getKey() + " is " + s.getValue() + " years old.")
-				.sorted()
 				.collect(Collectors.joining("\n"));
 	}
 
