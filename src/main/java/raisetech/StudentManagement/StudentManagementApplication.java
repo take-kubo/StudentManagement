@@ -43,7 +43,7 @@ public class StudentManagementApplication {
 	@GetMapping("/studentInfo2")
 	public String getStudentInfo2() {
 				return studentMap.entrySet().stream()
-				.sorted(Map.Entry.comparingByKey())
+				.sorted(Map.Entry.comparingByKey(new MixedCharacterComparator()))
 				.map(s -> s.getKey() + " is " + s.getValue() + " years old.")
 				.collect(Collectors.joining("\n"));
 	}
