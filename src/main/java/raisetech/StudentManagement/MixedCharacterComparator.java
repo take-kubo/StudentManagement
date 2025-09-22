@@ -42,9 +42,9 @@ public class MixedCharacterComparator implements Comparator<String> {
     引数に渡した２つの文字列 str1 と str2 の順番を比較します。
     比較の方法は次の通り。まず先頭の文字同士を比較、つぎに２番目の文字同士を比較、つぎに３番目の文字同士を比較、
     つぎに・・・、と、短い方の文字列の最後まで比較します。
-    文字同士の比較基準は、日本語同士は辞書順、数字同士は小さい順、ローマ字同士はアルファベット順で、
-　  異種の文字列同士の場合は、日本語 ⇒ 数字 ⇒ ローマ字 の順です。
-    その結果、str1 ⇒ str2 の順なら負の値を、str1 = str2 なら 0 を、str2 ⇒ str1 なら正の値を返します。
+    比較基準は、日本語同士は辞書順、数字同士は小さい順、ローマ字同士はアルファベット順、その他同士はUnicode順で、
+　  異種の文字同士の場合は、日本語 ⇒ 数字 ⇒ ローマ字 ⇒ その他 の順です。
+    結果、str1 ⇒ str2 の正順なら負の整数を、str1 = str2 なら 0 を、str2 ⇒ str1 の逆順なら負の整数を返します。
    */
   @Override
   public int compare(String str1, String str2) {
@@ -57,73 +57,68 @@ public class MixedCharacterComparator implements Comparator<String> {
     int sizeOfSmallerList = Math.min(str1.length(), str2.length());
 
     // 文字を1個ずつ取り出し順序を比較する
+    // 異なる文字の場合は結果が return され、同じ文字の場合は次の文字の比較に進む
     for (int i = 0; i < sizeOfSmallerList; i++) {
 
       // 文字の種類を取得する
       String typeOfPart1 = getTypeOf(partsOfStr1.get(i));
       String typeOfPart2 = getTypeOf(partsOfStr2.get(i));
 
-      // 文字の組み合わせごとに、比較する
-      // 文字が異なる場合は結果が確定し、同じ場合は次の文字の比較に進む
-      if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Japanese")) {
 
-        // 文字が「日本語」と「日本語」の場合なので辞書順で比較する
+      // 1. 文字の種類が同じ場合
+      // 文字が「日本語」同士の場合は、辞書順で比較する
+      if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Japanese")) {
         int comparisonResult = japaneseCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
         if (comparisonResult != 0) {
           return comparisonResult;
         }
+      }
 
-      } else if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Number")) {
-
-        // 「日本語」⇒「数字」の順なので負の整数を返す
-        return -1;
-
-      } else if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Romaji")) {
-
-        // 「日本語」⇒「ローマ字」の順なので負の整数を返す
-        return -1;
-
-      } else if (typeOfPart1.equals("Number") && typeOfPart2.equals("Japanese")) {
-
-        // 「数字」⇒「日本語」の順なので正の整数を返す
-        return 1;
-
-      } else if (typeOfPart1.equals("Number") && typeOfPart2.equals("Number")) {
-
-        // 文字が「数字」と「数字」の場合なので、まず Integer 型に変換する
+      // 文字が「数字」同士の場合は、自然な大小で比較する
+      if (typeOfPart1.equals("Number") && typeOfPart2.equals("Number")) {
         int number1 = Integer.parseInt(partsOfStr1.get(i));
         int number2 = Integer.parseInt(partsOfStr2.get(i));
 
-        // そして数として自然な大小で比較する
         int comparisonResult = Integer.compare(number1, number2);
         if (comparisonResult != 0) {
           return comparisonResult;
         }
+      }
 
-      } else if (typeOfPart1.equals("Number") && typeOfPart2.equals("Romaji")) {
-
-        // 「数字」⇒「ローマ字」の順なので負の整数を返す
-        return -1;
-
-      } else if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Japanese")) {
-
-        // 「ローマ字」⇒「日本語」の順なので正の整数を返す
-        return 1;
-
-      } else if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Number")) {
-
-        // 「ローマ字」⇒「数字」の順なので正の整数を返す
-        return 1;
-
-      } else if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Romaji")) {
-
-        // 文字が「ローマ字」と「ローマ字」の場合なので、アルファベット順で比較する。
+      // 文字が「ローマ字」同士の場合は、アルファベット順で比較する。
+      if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Romaji")) {
         int comparisonResult = englishCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
         if (comparisonResult != 0) {
           return comparisonResult;
         }
-
       }
+
+      // 文字が「その他」同士の場合なので、Unicode順で比較する
+      if (typeOfPart1.equals("Other") && typeOfPart2.equals("Other")) {
+        int comparisonResult = partsOfStr1.get(i).compareTo(partsOfStr2.get(i));
+        if (comparisonResult != 0) {
+          return comparisonResult;
+        }
+      }
+
+      // 2. 文字の種類が異なる場合
+      // 「日本語」⇒「数字」⇒「ローマ字」⇒「その他」の順番を「正順」、逆の順番を「逆順」と呼ぶ
+      //  正順の場合は負の整数を返し、逆順の場合は正の整数を返す
+      if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Number")) return -1;
+      if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Romaji")) return -1;
+      if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Other"))  return -1;
+
+      if (typeOfPart1.equals("Number") && typeOfPart2.equals("Japanese")) return  1;
+      if (typeOfPart1.equals("Number") && typeOfPart2.equals("Romaji"))   return -1;
+      if (typeOfPart1.equals("Number") && typeOfPart2.equals("Other"))    return -1;
+
+      if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Japanese")) return  1;
+      if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Number"))   return  1;
+      if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Other"))    return -1;
+
+      if (typeOfPart1.equals("Other") && typeOfPart2.equals("Japanese"))  return  1;
+      if (typeOfPart1.equals("Other") && typeOfPart2.equals("Number"))    return  1;
+      if (typeOfPart1.equals("Other") && typeOfPart2.equals("Romaji"))    return  1;
 
     }
 
