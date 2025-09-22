@@ -9,9 +9,7 @@ import java.util.Locale;
 /*
   日本語、数字、ローマ字が混在した文字列（String）の順序を比較するクラス
 
-  Comparatorインターフェースを実装し、compareメソッドをオーバーライドしています。
-  日本語同士の場合は辞書順、数字同士の場合は小さい順、ローマ字同士の場合はアルファベット順（小文字が先）です。
-  異種の文字列通しの場合は、日本語 ⇒ 数字 ⇒ ローマ字 の順です。
+  Comparator インターフェースの実装であり、compare メソッドをオーバーライドしています。
  */
 public class MixedCharacterComparator implements Comparator<String> {
 
@@ -31,7 +29,7 @@ public class MixedCharacterComparator implements Comparator<String> {
 
    ※compare メソッド内でインスタンス化すると compare で文字列を比較するたびに Collator クラスの
    　インスタンスが生成されます。呼び出し側でソートをするとき compare メソッドは何回も呼ばれます。
-   　結果として動作速度が遅くなったり、メモリを圧迫したりするそうです。
+   　結果として動作速度が遅くなったり、メモリを圧迫したりするようです。
    */
   public MixedCharacterComparator() {
     this.japaneseCollator = Collator.getInstance(Locale.JAPANESE);
@@ -41,9 +39,12 @@ public class MixedCharacterComparator implements Comparator<String> {
   /*
     compare メソッドの実装
 
-    TODO:このコメントでいいか？修正すべきでは？一文字ずつ比較しているということを書くべきでは？
-    引数に渡した２つの文字列 str1 と str2 の順番を比較し、str1 ⇒ str2 の順なら負の値を、
-    str1 = str2 なら 0 を、str2 ⇒ str1 なら正の値を返します。
+    引数に渡した２つの文字列 str1 と str2 の順番を比較します。
+    比較の方法は次の通り。まず先頭の文字同士を比較、つぎに２番目の文字同士を比較、つぎに３番目の文字同士を比較、
+    つぎに・・・、と、短い方の文字列の最後まで比較します。
+    文字同士の比較基準は、日本語同士は辞書順、数字同士は小さい順、ローマ字同士はアルファベット順で、
+　  異種の文字列同士の場合は、日本語 ⇒ 数字 ⇒ ローマ字 の順です。
+    その結果、str1 ⇒ str2 の順なら負の値を、str1 = str2 なら 0 を、str2 ⇒ str1 なら正の値を返します。
    */
   @Override
   public int compare(String str1, String str2) {
@@ -67,7 +68,7 @@ public class MixedCharacterComparator implements Comparator<String> {
       if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Japanese")) {
 
         // 文字が「日本語」と「日本語」の場合なので辞書順で比較する
-        int comparisonResult =  japaneseCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
+        int comparisonResult = japaneseCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
         if (comparisonResult != 0) {
           return comparisonResult;
         }
@@ -117,7 +118,7 @@ public class MixedCharacterComparator implements Comparator<String> {
       } else if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Romaji")) {
 
         // 文字が「ローマ字」と「ローマ字」の場合なので、アルファベット順で比較する。
-        int comparisonResult =  englishCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
+        int comparisonResult = englishCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
         if (comparisonResult != 0) {
           return comparisonResult;
         }
@@ -126,8 +127,8 @@ public class MixedCharacterComparator implements Comparator<String> {
 
     }
 
-    // 先頭から短い方の文字列の末尾まで、同じだった場合
-    // 「短い文字列」⇒「長い文字列」の順番
+    // 先頭から短い方の文字列の末尾まで文字が同じだった場合（例：abc, abcdef）
+    // 「短い文字列」⇒「長い文字列」の順番（例：abc ⇒ abcdef）
     return str2.length() - str1.length();
   }
 
@@ -152,14 +153,11 @@ public class MixedCharacterComparator implements Comparator<String> {
   private String getTypeOf(String targetString) {
     if (targetString.matches("^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠ー]+$")) {
       return "Japanese";
-    }
-    else if (targetString.matches("^[0-9]+$")) {
+    } else if (targetString.matches("^[0-9]+$")) {
       return "Number";
-    }
-    else if (targetString.matches("^[a-zA-Z]+$")) {
+    } else if (targetString.matches("^[a-zA-Z]+$")) {
       return "Romaji";
-    }
-    else {
+    } else {
       return "Other";
     }
   }
