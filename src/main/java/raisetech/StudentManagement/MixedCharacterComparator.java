@@ -129,7 +129,7 @@ public class MixedCharacterComparator implements Comparator<String> {
 
     // 先頭から短い方の文字列の末尾まで文字が同じだった場合（例：abc, abcdef）
     // 「短い文字列」⇒「長い文字列」の順番（例：abc ⇒ abcdef）
-    return str2.length() - str1.length();
+    return str1.length() - str2.length();
   }
 
 
