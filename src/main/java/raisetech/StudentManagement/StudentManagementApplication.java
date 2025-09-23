@@ -1,9 +1,9 @@
 package raisetech.StudentManagement;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,10 @@ public class StudentManagementApplication {
 
   private String name = "Yamada Taro";
   private String age = "40";
-  private Map<String, String> studentMap = new HashMap<>();
+
+  //
+  @Autowired
+  private StudentService studentService;
 
   public static void main(String[] args) {
     SpringApplication.run(StudentManagementApplication.class, args);
@@ -43,7 +46,7 @@ public class StudentManagementApplication {
   /* 課題：より複雑なものにチャレンジする（Mapを使うなど） */
   @GetMapping("/studentInfo2")
   public String getStudentInfo2() {
-    return studentMap.entrySet().stream()
+    return studentService.studentMap.entrySet().stream()
         .sorted(Map.Entry.comparingByKey(Comparator.nullsLast(new MixedCharacterComparator())))
         .map(s -> s.getKey() + " is " + s.getValue() + " years old.")
         .collect(Collectors.joining("\n"));
@@ -51,6 +54,6 @@ public class StudentManagementApplication {
 
   @PostMapping("/studentInfo2")
   public void setStudentInfo2(String studentName, String studentAge) {
-    this.studentMap.put(studentName, studentAge);
+    studentService.studentMap.put(studentName, studentAge);
   }
 }
