@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
@@ -53,7 +54,11 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo2")
-  public void setStudentInfo2(String studentName, String studentAge) {
+  public void setStudentInfo2(
+      @RequestParam(required = true, defaultValue = "unknown") String studentName,
+      @RequestParam(required = true, defaultValue = "unknown") String studentAge) {
+
     studentService.studentMap.put(studentName, studentAge);
+
   }
 }
