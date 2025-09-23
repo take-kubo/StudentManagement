@@ -17,8 +17,7 @@ public class StudentManagementApplication {
 
   private String name = "Yamada Taro";
   private String age = "40";
-
-  //
+  // @Autowired アノテーションは studentService と StudentService クラスを自動で関連づけてくれます
   @Autowired
   private StudentService studentService;
 
