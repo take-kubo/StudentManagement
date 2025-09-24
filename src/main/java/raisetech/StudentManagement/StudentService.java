@@ -13,6 +13,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentService {
 
+  private String name = "Yamada Taro";
+  private String age = "40";
   public Map<String, String> studentMap = new HashMap<>();
+
+  /* Getter */
+  public String getName() {
+    return name;
+  }
+
+  public String getAge() {
+    return age;
+  }
+
+  /* Setter */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setAge(String age) {
+    this.age = age;
+  }
 
 }

@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StudentManagementApplication {
 
-  private String name = "Yamada Taro";
-  private String age = "40";
-  // @Autowired アノテーションは studentService と StudentService クラスを自動で関連づけてくれます
+ // @Autowired アノテーションは studentService と StudentService クラスを自動で関連づけてくれます
   @Autowired
   private StudentService studentService;
 
@@ -28,18 +26,18 @@ public class StudentManagementApplication {
   /* 課題：講座の再現をする */
   @GetMapping("/studentInfo")
   public String getStudentInfo() {
-    return name + " " + age + "歳";
+    return studentService.getName() + " " + studentService.getAge() + "歳";
   }
 
   @PostMapping("/studentInfo")
   public void setStudentInfo(String name, String age) {
-    this.name = name;
-    this.age = age;
+    studentService.setName(name);
+    studentService.setAge(age);
   }
 
   @PostMapping("/studentName")
   public void updateStudentName(String name) {
-    this.name = name;
+    studentService.setName(name);
   }
 
 
