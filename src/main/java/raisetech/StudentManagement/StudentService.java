@@ -2,6 +2,7 @@ package raisetech.StudentManagement;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 /*
@@ -15,7 +16,7 @@ public class StudentService {
 
   private String name = "Yamada Taro";
   private String age = "40";
-  public Map<String, String> studentMap = new HashMap<>();
+  private final Map<String, String> studentMap = new ConcurrentHashMap<>();
 
   /* Getter */
   public String getName() {
@@ -26,6 +27,11 @@ public class StudentService {
     return age;
   }
 
+  public Map<String, String> getStudentMap() {
+    return studentMap;
+  }
+
+
   /* Setter */
   public void setName(String name) {
     this.name = name;
@@ -33,6 +39,10 @@ public class StudentService {
 
   public void setAge(String age) {
     this.age = age;
+  }
+
+  public void setStudentMap(String name, String age) {
+    this.studentMap.put(name, age);
   }
 
 }

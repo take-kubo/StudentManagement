@@ -44,7 +44,7 @@ public class StudentManagementApplication {
   /* 課題：より複雑なものにチャレンジする（Mapを使うなど） */
   @GetMapping("/studentInfo2")
   public String getStudentInfo2() {
-    return studentService.studentMap.entrySet().stream()
+    return studentService.getStudentMap().entrySet().stream()
         .sorted(Map.Entry.comparingByKey(Comparator.nullsLast(new MixedCharacterComparator())))
         .map(s -> s.getKey() + " is " + s.getValue() + " years old.")
         .collect(Collectors.joining("\n"));
@@ -55,7 +55,7 @@ public class StudentManagementApplication {
       @RequestParam(required = true, defaultValue = "unknown") String studentName,
       @RequestParam(required = true, defaultValue = "unknown") String studentAge) {
 
-    studentService.studentMap.put(studentName, studentAge);
+    studentService.setStudentMap(studentName, studentAge);
 
   }
 }
