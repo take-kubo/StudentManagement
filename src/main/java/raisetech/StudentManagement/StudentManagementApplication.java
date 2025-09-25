@@ -1,13 +1,11 @@
 package raisetech.StudentManagement;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +21,7 @@ public class StudentManagementApplication {
     SpringApplication.run(StudentManagementApplication.class, args);
   }
 
+
   /* 課題：講座の再現をする */
   @GetMapping("/studentInfo")
   public String getStudentInfo() {
@@ -30,11 +29,9 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo")
-  public void setStudentInfo(
-      @RequestParam(required = true, defaultValue = "unknown") String name,
-      @RequestParam(required = true, defaultValue = "unknown") String age) {
-    studentService.setName(name);
-    studentService.setAge(age);
+  public void setStudentInfo(@RequestBody StudentNameAndAgeDTO studentNameAndAgeDTO) {
+    studentService.setName(studentNameAndAgeDTO.getStudentName());
+    studentService.setAge(studentNameAndAgeDTO.getStudentAge());
   }
 
   @PostMapping("/studentName")
@@ -50,11 +47,8 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo2")
-  public void setStudentInfo2(
-      @RequestParam(required = true, defaultValue = "unknown") String studentName,
-      @RequestParam(required = true, defaultValue = "unknown") String studentAge) {
-
-    studentService.setStudentMap(studentName, studentAge);
-
+  public void setStudentInfo2(@RequestBody StudentNameAndAgeDTO studentNameAndAgeDTO) {
+    studentService.setStudentMap(studentNameAndAgeDTO.getStudentName(), studentNameAndAgeDTO.getStudentAge());
   }
+
 }
