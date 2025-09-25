@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
@@ -29,9 +28,9 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo")
-  public void setStudentInfo(@RequestBody StudentNameAndAgeDTO studentNameAndAgeDTO) {
-    studentService.setName(studentNameAndAgeDTO.getStudentName());
-    studentService.setAge(studentNameAndAgeDTO.getStudentAge());
+  public void setStudentInfo(@RequestBody StudentPersonalDataDTO studentPersonalDataDTO) {
+    studentService.setName(studentPersonalDataDTO.getStudentName());
+    studentService.setAge(studentPersonalDataDTO.getStudentAge());
   }
 
   @PostMapping("/studentName")
@@ -43,12 +42,12 @@ public class StudentManagementApplication {
   /* 課題：より複雑なものにチャレンジする（Mapを使うなど） */
   @GetMapping("/studentInfo2")
   public String getStudentInfo2() {
-    return studentService.getAllStudentInformation();
+    return studentService.getAllStudentsPersonalData();
   }
 
   @PostMapping("/studentInfo2")
-  public void setStudentInfo2(@RequestBody StudentNameAndAgeDTO studentNameAndAgeDTO) {
-    studentService.setStudentMap(studentNameAndAgeDTO.getStudentName(), studentNameAndAgeDTO.getStudentAge());
+  public void setStudentInfo2(@RequestBody StudentPersonalDataDTO studentPersonalDataDTO) {
+    studentService.setStudentPersonalDataMap(studentPersonalDataDTO.getStudentName(), studentPersonalDataDTO.getStudentAge());
   }
 
 }

@@ -1,11 +1,11 @@
 package raisetech.StudentManagement;
 
-public class StudentNameAndAgeDTO {
+public class StudentPersonalDataDTO {
 
   private String studentName;
   private String studentAge;
 
-  public StudentNameAndAgeDTO() {
+  public StudentPersonalDataDTO() {
     studentName = "unknown";
     studentAge = "unknown";
   }

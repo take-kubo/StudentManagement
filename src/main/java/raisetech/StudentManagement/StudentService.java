@@ -1,7 +1,6 @@
 package raisetech.StudentManagement;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -18,7 +17,7 @@ public class StudentService {
 
   private String name = "Yamada Taro";
   private String age = "40";
-  private final Map<String, String> studentMap = new ConcurrentHashMap<>();
+  private final Map<String, String> studentPersonalDataMap = new ConcurrentHashMap<>();
 
   /* Getter */
   public String getName() {
@@ -29,8 +28,8 @@ public class StudentService {
     return age;
   }
 
-  public Map<String, String> getStudentMap() {
-    return studentMap;
+  public Map<String, String> getStudentPersonalDataMap() {
+    return studentPersonalDataMap;
   }
 
 
@@ -43,8 +42,8 @@ public class StudentService {
     this.age = age;
   }
 
-  public void setStudentMap(String name, String age) {
-    this.studentMap.put(name, age);
+  public void setStudentPersonalDataMap(String name, String age) {
+    this.studentPersonalDataMap.put(name, age);
   }
 
   /*
@@ -53,8 +52,8 @@ public class StudentService {
     studentMap に登録した受講生情報を "〇〇 is △△ years old." という形式の文字列にし、それぞれの文字列を
     改行コード（\n）で連結して返します。
    */
-  public String getAllStudentInformation() {
-    return studentMap.entrySet().stream()
+  public String getAllStudentsPersonalData() {
+    return studentPersonalDataMap.entrySet().stream()
         .sorted(Map.Entry.comparingByKey(Comparator.nullsLast(new MixedCharacterComparator())))
         .map(s -> s.getKey() + " is " + s.getValue() + " years old.")
         .collect(Collectors.joining("\n"));
