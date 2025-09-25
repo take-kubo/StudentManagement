@@ -30,7 +30,9 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo")
-  public void setStudentInfo(String name, String age) {
+  public void setStudentInfo(
+      @RequestParam(required = true, defaultValue = "unknown") String name,
+      @RequestParam(required = true, defaultValue = "unknown") String age) {
     studentService.setName(name);
     studentService.setAge(age);
   }
