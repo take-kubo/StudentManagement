@@ -1,8 +1,10 @@
 package raisetech.StudentManagement;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /*
@@ -45,4 +47,16 @@ public class StudentService {
     this.studentMap.put(name, age);
   }
 
+  /*
+    すべての受講生情報を文字列で返すメソッド
+
+    studentMap に登録した受講生情報を "〇〇 is △△ years old." という形式の文字列にし、それぞれの文字列を
+    改行コード（\n）で連結して返します。
+   */
+  public String getAllStudentInformation() {
+    return studentMap.entrySet().stream()
+        .sorted(Map.Entry.comparingByKey(Comparator.nullsLast(new MixedCharacterComparator())))
+        .map(s -> s.getKey() + " is " + s.getValue() + " years old.")
+        .collect(Collectors.joining("\n"));
+  }
 }

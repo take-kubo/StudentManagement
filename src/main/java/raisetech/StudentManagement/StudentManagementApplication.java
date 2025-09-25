@@ -46,10 +46,7 @@ public class StudentManagementApplication {
   /* 課題：より複雑なものにチャレンジする（Mapを使うなど） */
   @GetMapping("/studentInfo2")
   public String getStudentInfo2() {
-    return studentService.getStudentMap().entrySet().stream()
-        .sorted(Map.Entry.comparingByKey(Comparator.nullsLast(new MixedCharacterComparator())))
-        .map(s -> s.getKey() + " is " + s.getValue() + " years old.")
-        .collect(Collectors.joining("\n"));
+    return studentService.getAllStudentInformation();
   }
 
   @PostMapping("/studentInfo2")
