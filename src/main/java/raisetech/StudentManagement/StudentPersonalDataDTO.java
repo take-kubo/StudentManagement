@@ -1,5 +1,7 @@
 package raisetech.StudentManagement;
 
+import jakarta.validation.constraints.NotBlank;
+
 /*
   リクエストのBodyで渡された JSON データを受け取るための DTO(Data Transfer Object) クラス
 
@@ -8,9 +10,11 @@ package raisetech.StudentManagement;
 public class StudentPersonalDataDTO {
 
   // 受講生の名前
+  @NotBlank
   private String studentName;
 
   // 受講生の年齢
+  @NotBlank
   private String studentAge;
 
   // コンストラクタ

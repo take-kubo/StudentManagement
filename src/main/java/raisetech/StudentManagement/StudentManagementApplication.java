@@ -1,8 +1,12 @@
 package raisetech.StudentManagement;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +32,21 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo")
-  public void setStudentInfo(@RequestBody StudentPersonalDataDTO studentPersonalDataDTO) {
+  public ResponseEntity<?> setStudentInfo(
+      @Valid @RequestBody StudentPersonalDataDTO studentPersonalDataDTO,
+      BindingResult bindingResult) {
+
+    // 入力チェック失敗。HTTPステータスコード400とエラーメッセージをクライアントに返す
+    if (bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    }
+
+    // 入力チェック成功。受講生情報を変数に代入し、HTTPステータスコード200とメッセージをクライアントに返す
     studentService.setName(studentPersonalDataDTO.getStudentName());
     studentService.setAge(studentPersonalDataDTO.getStudentAge());
+
+    return ResponseEntity.status(HttpStatus.OK).body("受講生情報を変数に代入しました");
+
   }
 
   @PostMapping("/studentName")
@@ -46,8 +62,21 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentInfo2")
-  public void setStudentInfo2(@RequestBody StudentPersonalDataDTO studentPersonalDataDTO) {
-    studentService.setStudentPersonalDataMap(studentPersonalDataDTO.getStudentName(), studentPersonalDataDTO.getStudentAge());
+  public ResponseEntity<?> setStudentInfo2(
+      @Valid @RequestBody StudentPersonalDataDTO studentPersonalDataDTO,  // JSONで受信し入力チェック
+      BindingResult bindingResult) {  // 入力チェックの結果を保持するオブジェクト
+
+    // 入力チェック失敗。HTTPステータスコード400とエラーメッセージをクライアントに返す
+    if (bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    }
+
+    // 入力チェック成功。受講生情報をマップに登録し、HTTPステータスコード201とメッセージをクライアントに返す
+    studentService.setStudentPersonalDataMap(
+        studentPersonalDataDTO.getStudentName(), studentPersonalDataDTO.getStudentAge());
+
+    return ResponseEntity.status(HttpStatus.CREATED).body("受講生情報をマップに登録しました");
+
   }
 
 }
