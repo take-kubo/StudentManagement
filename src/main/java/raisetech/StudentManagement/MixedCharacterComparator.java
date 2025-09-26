@@ -49,6 +49,15 @@ public class MixedCharacterComparator implements Comparator<String> {
   @Override
   public int compare(String str1, String str2) {
 
+    // 入力チェック
+    // str1 が null なら正の値, str2 がnullなら負の値を返します
+    if (str1 == null) {
+      return 1;
+    }
+    if (str2 == null) {
+      return -1;
+    }
+
     // 引数の文字列を分割し、文字列の要素をリストに格納する
     List<String> partsOfStr1 = getDividedStringFrom(str1);
     List<String> partsOfStr2 = getDividedStringFrom(str2);
