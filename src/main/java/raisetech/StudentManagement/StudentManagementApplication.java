@@ -50,8 +50,20 @@ public class StudentManagementApplication {
   }
 
   @PostMapping("/studentName")
-  public void updateStudentName(String name) {
-    studentService.setName(name);
+  public ResponseEntity<?> updateStudentName(
+      @Valid @RequestBody StudentPersonalDataDTO studentPersonalDataDTO,
+      BindingResult bindingResult) {
+
+    // 入力チェック失敗。HTTPステータスコード400とエラーメッセージをクライアントに返す
+    if (bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    }
+
+    // 入力チェック成功。受講生の名前を変数に代入し、HTTPステータスコード200とメッセージをクライアントに返す
+    studentService.setName(studentPersonalDataDTO.getStudentName());
+
+    return ResponseEntity.status(HttpStatus.OK).body("受講生の名前を変数に代入しました");
+
   }
 
 
