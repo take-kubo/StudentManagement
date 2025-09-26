@@ -16,19 +16,19 @@ import org.springframework.stereotype.Service;
 public class StudentService {
 
   private String name = "Yamada Taro";
-  private String age = "40";
-  private final Map<String, String> studentPersonalDataMap = new ConcurrentHashMap<>();
+  private Integer age = 40;
+  private final Map<String, Integer> studentPersonalDataMap = new ConcurrentHashMap<>();
 
   /* Getter */
   public String getName() {
     return name;
   }
 
-  public String getAge() {
+  public Integer getAge() {
     return age;
   }
 
-  public Map<String, String> getStudentPersonalDataMap() {
+  public Map<String, Integer> getStudentPersonalDataMap() {
     return studentPersonalDataMap;
   }
 
@@ -38,11 +38,11 @@ public class StudentService {
     this.name = name;
   }
 
-  public void setAge(String age) {
+  public void setAge(Integer age) {
     this.age = age;
   }
 
-  public void setStudentPersonalDataMap(String name, String age) {
+  public void setStudentPersonalDataMap(String name, Integer age) {
     this.studentPersonalDataMap.put(name, age);
   }
 

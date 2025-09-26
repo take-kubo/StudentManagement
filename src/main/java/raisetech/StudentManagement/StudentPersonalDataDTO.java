@@ -1,6 +1,9 @@
 package raisetech.StudentManagement;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /*
   リクエストのBodyで渡された JSON データを受け取るための DTO(Data Transfer Object) クラス
@@ -14,13 +17,15 @@ public class StudentPersonalDataDTO {
   private String studentName;
 
   // 受講生の年齢
-  @NotBlank
-  private String studentAge;
+  @NotNull
+  @Max(200)
+  @Min(0)
+  private Integer studentAge;
 
   // コンストラクタ
   public StudentPersonalDataDTO() {
     studentName = "unknown";
-    studentAge = "unknown";
+    studentAge = 0;
   }
 
   /* getter */
@@ -28,7 +33,7 @@ public class StudentPersonalDataDTO {
     return studentName;
   }
 
-  public String getStudentAge() {
+  public Integer getStudentAge() {
     return studentAge;
   }
 
@@ -37,7 +42,7 @@ public class StudentPersonalDataDTO {
     this.studentName = studentName;
   }
 
-  public void setStudentAge(String studentAge) {
+  public void setStudentAge(Integer studentAge) {
     this.studentAge = studentAge;
   }
 
