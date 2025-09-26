@@ -59,8 +59,8 @@ public class MixedCharacterComparator implements Comparator<String> {
     }
 
     // 引数の文字列を分割し、文字列の要素をリストに格納する
-    List<String> partsOfStr1 = getDividedStringFrom(str1);
-    List<String> partsOfStr2 = getDividedStringFrom(str2);
+    char[] partsOfStr1 = str1.toCharArray();
+    char[] partsOfStr2 = str2.toCharArray();
 
     // 短い方の文字列の長さを取得する（forループの回数を決めるため）
     int sizeOfSmallerList = Math.min(str1.length(), str2.length());
@@ -70,14 +70,16 @@ public class MixedCharacterComparator implements Comparator<String> {
     for (int i = 0; i < sizeOfSmallerList; i++) {
 
       // 文字の種類を取得する
-      String typeOfPart1 = getTypeOf(partsOfStr1.get(i));
-      String typeOfPart2 = getTypeOf(partsOfStr2.get(i));
+      String typeOfPart1 = getTypeOf(String.valueOf(partsOfStr1[i]));
+      String typeOfPart2 = getTypeOf(String.valueOf(partsOfStr2[i]));
 
 
       // 1. 文字の種類が同じ場合
       // 文字が「日本語」同士の場合は、辞書順で比較する
       if (typeOfPart1.equals("Japanese") && typeOfPart2.equals("Japanese")) {
-        int comparisonResult = japaneseCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
+        int comparisonResult = japaneseCollator.compare(
+            String.valueOf(partsOfStr1[i]), String.valueOf(partsOfStr2[i]));
+
         if (comparisonResult != 0) {
           return comparisonResult;
         }
@@ -85,8 +87,8 @@ public class MixedCharacterComparator implements Comparator<String> {
 
       // 文字が「数字」同士の場合は、自然な大小で比較する
       if (typeOfPart1.equals("Number") && typeOfPart2.equals("Number")) {
-        int number1 = Integer.parseInt(partsOfStr1.get(i));
-        int number2 = Integer.parseInt(partsOfStr2.get(i));
+        int number1 = Character.getNumericValue(partsOfStr1[i]);
+        int number2 = Character.getNumericValue(partsOfStr2[i]);
 
         int comparisonResult = Integer.compare(number1, number2);
         if (comparisonResult != 0) {
@@ -96,7 +98,9 @@ public class MixedCharacterComparator implements Comparator<String> {
 
       // 文字が「ローマ字」同士の場合は、アルファベット順で比較する。
       if (typeOfPart1.equals("Romaji") && typeOfPart2.equals("Romaji")) {
-        int comparisonResult = englishCollator.compare(partsOfStr1.get(i), partsOfStr2.get(i));
+        int comparisonResult = englishCollator.compare(
+            String.valueOf(partsOfStr1[i]), String.valueOf(partsOfStr2[i]));
+
         if (comparisonResult != 0) {
           return comparisonResult;
         }
@@ -104,7 +108,7 @@ public class MixedCharacterComparator implements Comparator<String> {
 
       // 文字が「その他」同士の場合なので、Unicode順で比較する
       if (typeOfPart1.equals("Other") && typeOfPart2.equals("Other")) {
-        int comparisonResult = partsOfStr1.get(i).compareTo(partsOfStr2.get(i));
+        int comparisonResult = Character.compare(partsOfStr1[i],partsOfStr2[i]);
         if (comparisonResult != 0) {
           return comparisonResult;
         }
