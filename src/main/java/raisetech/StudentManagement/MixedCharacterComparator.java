@@ -1,9 +1,7 @@
 package raisetech.StudentManagement;
 
 import java.text.Collator;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 /*
@@ -58,7 +56,7 @@ public class MixedCharacterComparator implements Comparator<String> {
       return -1;
     }
 
-    // 引数の文字列を分割し、文字列の要素をリストに格納する
+    // 引数の文字列を分割し、文字をリストに格納する
     char[] partsOfStr1 = str1.toCharArray();
     char[] partsOfStr2 = str2.toCharArray();
 
