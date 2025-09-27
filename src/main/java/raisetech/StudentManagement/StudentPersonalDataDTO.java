@@ -22,11 +22,6 @@ public class StudentPersonalDataDTO {
   @Min(0)
   private Integer studentAge;
 
-  // コンストラクタ
-  public StudentPersonalDataDTO() {
-    studentName = "unknown";
-    studentAge = 0;
-  }
 
   /* getter */
   public String getStudentName() {
