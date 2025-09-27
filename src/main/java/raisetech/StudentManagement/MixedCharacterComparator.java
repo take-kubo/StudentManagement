@@ -142,17 +142,6 @@ public class MixedCharacterComparator implements Comparator<String> {
 
 
   /*
-    文字列を1文字ずつ取り出すメソッド
-
-    引数に渡した文字列を先頭から１文字ずつ取り出しリストにします。
-    例）"あいう123ABC"　⇒　"あ", "い", "う", "1", "2", "3", "A", "B", "C"
-   */
-  private List<String> getDividedStringFrom(String targetString) {
-    return Arrays.stream(targetString.split("")).toList();
-  }
-
-
-  /*
     文字列の種類を判別するメソッド
 
     引数に渡した文字列が日本語の場合は Japanese という文字列を、数字の場合は Number という文字列を、
