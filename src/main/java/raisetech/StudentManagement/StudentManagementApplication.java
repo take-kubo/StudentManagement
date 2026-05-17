@@ -19,6 +19,10 @@ public class StudentManagementApplication {
 
   @GetMapping("/studentInfo")
   public String getStudentInfo() {
+    Student student = new Student();
+    student.setName("EnamiKouji");
+    String name = student.getName();
+
     return name + " " + age + "歳";
   }
 
