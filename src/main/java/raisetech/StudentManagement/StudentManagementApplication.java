@@ -1,12 +1,12 @@
 package raisetech.StudentManagement;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,20 +26,16 @@ public class StudentManagementApplication {
   }
 
   @GetMapping("/student")
-  public Object getStudent(@RequestParam String name) {
+  public ResponseEntity<String> getStudent(@RequestParam String name) {
     Student student = repository.searchByName(name);
 
     if (Objects.isNull(student)) {
-      Map<String, Object> errorMessageMap = new HashMap<>();
-
-      errorMessageMap.put("title", "Not Found");
-      errorMessageMap.put("status", 404);
-      errorMessageMap.put("detail", "指定された名前の受講生が見つかりませんでした。");
-
-      return errorMessageMap;
+      String errorMessage = "指定された名前の受講生が見つかりませんでした。";
+      return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
 
-    return student.getName() + " " + student.getAge() + "歳";
+    String normalMessage = student.getName() + " " + student.getAge() + "歳";
+    return new ResponseEntity<>(normalMessage, HttpStatus.OK);
 
   }
 
