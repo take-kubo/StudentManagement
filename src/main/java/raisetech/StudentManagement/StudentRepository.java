@@ -1,6 +1,5 @@
 package raisetech.StudentManagement;
 
-import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,8 +20,5 @@ public interface StudentRepository {
 
   @Delete("DELETE FROM student WHERE name = #{name}")
   void deleteStudent(String name);
-
-  @Select("SELECT * FROM student")
-  List<Student> readAllStudents();
 
 }
