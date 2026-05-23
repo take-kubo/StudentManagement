@@ -14,6 +14,9 @@ public class StudentManagementApplication {
   @Autowired
   StudentRepository repository;
 
+  @Autowired
+  StudentCourseRepository studentCourseRepository;
+
   public static void main(String[] args) {
     SpringApplication.run(StudentManagementApplication.class, args);
   }
@@ -23,4 +26,8 @@ public class StudentManagementApplication {
     return repository.search();
   }
 
+  @GetMapping("/studentCourseList")
+  public List<StudentCourse> getStudentCourseList() {
+    return studentCourseRepository.search();
+  }
 }
