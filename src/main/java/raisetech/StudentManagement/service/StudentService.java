@@ -23,7 +23,7 @@ public class StudentService {
 
     List<Student> studentsOver30;
     studentsOver30 = allStudents.stream()
-        .filter(student -> student.getAge() > 30)
+        .filter(student -> 30 < student.getAge() && student.getAge() < 40)
         .toList();
 
     return studentsOver30;
