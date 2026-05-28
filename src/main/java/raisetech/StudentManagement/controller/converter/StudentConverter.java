@@ -16,6 +16,18 @@ public class StudentConverter {
   public List<StudentDetail> convertStudentDetails(List<Student> students,
       List<StudentsCourses> studentsCourses) {
 
+    // 受講生コース情報のリストがnullでないかチェックしています
+    // nullだった場合は初期化された受講生コース情報をひとつ持つリストにしています
+    try {
+      Objects.requireNonNull(studentsCourses);
+    } catch (NullPointerException error) {
+      log.error(
+          "The studentsCourses list is null.",
+          error);
+      StudentsCourses emptyStudentsCourse = new StudentsCourses();
+      studentsCourses = List.of(emptyStudentsCourse);
+    }
+
     List<StudentDetail> studentDetails = new ArrayList<>();
 
     for (Student student : students) {
