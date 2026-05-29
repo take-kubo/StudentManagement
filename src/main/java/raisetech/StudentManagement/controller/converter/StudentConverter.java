@@ -9,10 +9,26 @@ import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
 import raisetech.StudentManagement.domain.StudentDetail;
 
+/**
+ * コントローラ用にデータの詰め替えを担当するコンバータ。
+ */
 @Slf4j
 @Component
 public class StudentConverter {
 
+  /**
+   * 受講生詳細情報のリストを生成する。
+   *
+   * <p>受講生情報と受講生コース情報を結合して受講生詳細情報を生成します。
+   * 受講生情報のIDがnullの場合NPEを投げます。
+   * 受講生コース情報が存在しない場合、空の受講生コース情報を使って受講生詳細情報を生成します。
+   * どちらの場合でもエラーログを出力します。</p>
+   *
+   * @param students 受講生情報のリスト
+   * @param studentsCourses 受講生コース情報のリスト
+   * @return 受講生詳細情報のリスト
+   * @throws NullPointerException 受講生情報のIDがnullの場合
+   */
   public List<StudentDetail> convertStudentDetails(List<Student> students,
       List<StudentsCourses> studentsCourses) throws NullPointerException {
 
