@@ -14,7 +14,7 @@ import raisetech.StudentManagement.domain.StudentDetail;
 public class StudentConverter {
 
   public List<StudentDetail> convertStudentDetails(List<Student> students,
-      List<StudentsCourses> studentsCourses) {
+      List<StudentsCourses> studentsCourses) throws NullPointerException {
 
     // 受講生コース情報のリストがnullでないかチェックしています
     // nullだった場合は初期化された受講生コース情報をひとつ持つリストにしています
@@ -35,13 +35,14 @@ public class StudentConverter {
       studentDetail.setStudent(student);
 
       // 受講生情報のID（student.getId()）がnullでないかチェックしています
+      // nullの場合はNPEを投げます
       try {
         Objects.requireNonNull(student.getId());
       } catch (NullPointerException error) {
         log.error(
             "The id field of student is null. The students table in studentmanagement database includes null id.",
             error);
-        System.exit(1);
+        throw new NullPointerException();
       }
 
       List<StudentsCourses> convertStudentCourses = new ArrayList<>();
