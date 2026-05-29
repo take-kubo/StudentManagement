@@ -2,6 +2,8 @@ package raisetech.StudentManagement.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
@@ -23,11 +25,22 @@ public class StudentController {
   }
 
   @GetMapping("/studentList")
-  public List<StudentDetail> getStudentList() {
+  public ResponseEntity<?> getStudentList() {
     List<Student> students = service.searchStudentList();
     List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
 
-    return converter.convertStudentDetails(students, studentsCourses);
+    try {
+      List<StudentDetail> studentDetails = converter.convertStudentDetails(students,
+          studentsCourses);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(studentDetails);
+    } catch (NullPointerException error) {
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("サーバー内部でエラーが発生しました。");
+    }
+
   }
 
   @GetMapping("/studentsCourseList")
