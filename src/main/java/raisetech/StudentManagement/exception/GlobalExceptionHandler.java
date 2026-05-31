@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(NullPointerException.class)
-  public ResponseEntity<String> nullPointerExceptionHandler(NullPointerException e) {
+  public ResponseEntity<String> nullPointerExceptionHandler() {
     return ResponseEntity
         .internalServerError()
         .body("システムエラーが発生しました。また再度アクセスしてください。");
