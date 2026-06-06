@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
+import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 
 @Controller
@@ -36,4 +37,9 @@ public class StudentController {
     return service.searchStudentsCourseList();
   }
 
+  @GetMapping("/newStudent")
+  public String newStudent(Model model) {
+    model.addAttribute("studentDetail", new StudentDetail());
+    return "registerStudent";
+  }
 }
