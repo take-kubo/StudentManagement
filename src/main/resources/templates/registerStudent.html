@@ -5,8 +5,42 @@
 </head>
 <body>
 <h1>受講生登録</h1>
-<table>
-
-</table>
+<form data-th-action="@{/registerStudent}" data-th-object="${studentDetail}" method="post">
+  <div>
+    <label for="name"></label>
+    <input type="text" id="name" data-th-field="*{student.name}" required/>
+  </div>
+  <div>
+    <label for="furigana"></label>
+    <input type="text" id="furigana" data-th-field="*{student.furigana}" required/>
+  </div>
+  <div>
+    <label for="nickname"></label>
+    <input type="text" id="nickname" data-th-field="*{student.nickname}" required/>
+  </div>
+  <div>
+    <label for="email"></label>
+    <input type="text" id="email" data-th-field="*{student.email}" required/>
+  </div>
+  <div>
+    <label for="address"></label>
+    <input type="text" id="address" data-th-field="*{student.address}" required/>
+  </div>
+  <div>
+    <label for="age"></label>
+    <input type="number" id="age" data-th-field="*{student.age}" required/>
+  </div>
+  <div>
+    <label for="gender"></label>
+    <input type="text" id="gender" data-th-field="*{student.gender}" required/>
+  </div>
+  <div>
+    <label for="remark"></label>
+    <input type="text" id="remark" data-th-field="*{student.remark}" required/>
+  </div>
+  <div>
+    <button type="submit">登録</button>
+  </div>
+</form>
 </body>
 </html>
