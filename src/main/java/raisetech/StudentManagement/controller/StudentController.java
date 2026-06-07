@@ -52,6 +52,8 @@ public class StudentController {
       return "registerStudent";
     }
 
+    service.registerStudent(studentDetail.getStudent());
+    
     return "redirect:/studentList";
   }
 }
