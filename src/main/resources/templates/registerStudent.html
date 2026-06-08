@@ -39,6 +39,22 @@
     <input type="text" id="remark" data-th-field="*{student.remark}" required/>
   </div>
   <div>
+    <label for="courseName"></label>
+    <input type="text" id="courseName"
+           data-th-field="*{studentsCourses[0].courseName}"
+           required/>
+  </div>
+  <div>
+    <label for="courseStartAt"></label>
+    <input type="datetime-local" id="courseStartAt"
+           data-th-field="*{studentsCourses[0].courseStartAt}" required/>
+  </div>
+  <div>
+    <label for="courseEndAt"></label>
+    <input type="datetime-local" id="courseEndAt"
+           data-th-field="*{studentsCourses[0].courseEndAt}" required/>
+  </div>
+  <div>
     <button type="submit">登録</button>
   </div>
 </form>
