@@ -28,4 +28,8 @@ public class StudentService {
   public void registerStudent(Student student) {
     repository.registerStudent(student);
   }
+
+  public void registerStudentCourse(StudentsCourses studentsCourses) {
+    repository.registerStudentCourse(studentsCourses);
+  }
 }
