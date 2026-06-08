@@ -17,13 +17,13 @@ public interface StudentRepository {
   List<StudentsCourses> searchStudentsCourses();
 
   @Insert({
-      "INSERT INTO students(name, furigana, nickname, email, address, age, gender, remark)",
-      "VALUES(#{name},#{furigana},#{nickname},#{email},#{address},#{age},#{gender},#{remark})"})
+      "INSERT INTO students(id, name, furigana, nickname, email, address, age, gender, remark)",
+      "VALUES(#{id}, #{name}, #{furigana}, #{nickname}, #{email}, #{address}, #{age}, #{gender}, #{remark})"})
   void registerStudent(Student student);
 
   @Insert({
-      "INSERT INTO students_courses(student_id, course_name, course_start_at, course_end_at)",
-      "VALUES(#{studentId}, #{courseName}, #{courseStartAt}, #{courseEndAt})"})
+      "INSERT INTO students_courses(id, student_id, course_name, course_start_at, course_end_at)",
+      "VALUES(#{id}, #{studentId}, #{courseName}, #{courseStartAt}, #{courseEndAt})"})
   void registerStudentCourse(StudentsCourses studentsCourses);
 
 }
