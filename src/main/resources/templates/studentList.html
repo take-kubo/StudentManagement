@@ -16,17 +16,45 @@
     <th>年齢</th>
     <th>性別</th>
     <th>備考</th>
+    <th>コース名</th>
+    <th>受講開始日</th>
+    <th>受講終了予定日</th>
   </tr>
   <tr data-th-each="studentDetail : ${studentList}">
-    <td data-th-text="${studentDetail.student.id}">1</td>
-    <td data-th-text="${studentDetail.student.name}">山田太郎</td>
-    <td data-th-text="${studentDetail.student.furigana}">ヤマダタロウ</td>
-    <td data-th-text="${studentDetail.student.nickname}">タロー</td>
-    <td data-th-text="${studentDetail.student.email}">taro@example.com</td>
-    <td data-th-text="${studentDetail.student.address}">東京</td>
-    <td data-th-text="${studentDetail.student.age}">20</td>
-    <td data-th-text="${studentDetail.student.gender}">男性</td>
-    <td data-th-text="${studentDetail.student.remark}">特になし</td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.id}">1</td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.name}">山田太郎
+    </td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.furigana}">
+      ヤマダタロウ
+    </td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.nickname}">
+      タロー
+    </td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.email}">
+      taro@example.com
+    </td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.address}">東京
+    </td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.age}">20</td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.gender}">男性</td>
+    <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.remark}">
+      特になし
+    </td>
+    <td>
+      <div data-th-each="studentCourse : ${studentDetail.studentsCourses}"
+           data-th-text="${studentCourse.courseName}">Javaコース
+      </div>
+    </td>
+    <td>
+      <div data-th-each="studentCourse : ${studentDetail.studentsCourses}"
+           data-th-text="${studentCourse.courseStartAt}">2025年1月1日
+      </div>
+    </td>
+    <td>
+      <div data-th-each="studentCourse : ${studentDetail.studentsCourses}"
+           data-th-text="${studentCourse.courseEndAt}">2025年12月31日
+      </div>
+    </td>
   </tr>
 </table>
 </body>
