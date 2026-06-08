@@ -21,4 +21,9 @@ public interface StudentRepository {
       "VALUES(#{name},#{furigana},#{nickname},#{email},#{address},#{age},#{gender},#{remark})"})
   void registerStudent(Student student);
 
+  @Insert({
+      "INSERT INTO students_courses(course_name, course_start_at, course_end_at)",
+      "VALUES(#{courseName}, #{courseStartAt}, #{courseEndAt})"})
+  void registerStudentCourse(StudentsCourses studentsCourses);
+
 }
