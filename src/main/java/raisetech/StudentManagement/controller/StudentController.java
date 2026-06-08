@@ -53,7 +53,8 @@ public class StudentController {
     }
 
     service.registerStudent(studentDetail.getStudent());
-    
+    service.registerStudentCourse(studentDetail.getStudentsCourses().getFirst());
+
     return "redirect:/studentList";
   }
 }
