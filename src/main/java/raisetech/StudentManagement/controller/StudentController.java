@@ -1,5 +1,6 @@
 package raisetech.StudentManagement.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,7 +48,8 @@ public class StudentController {
   }
 
   @PostMapping("/registerStudent")
-  public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+  public String registerStudent(@ModelAttribute @Valid StudentDetail studentDetail,
+      BindingResult result) {
     if (result.hasErrors()) {
       return "registerStudent";
     }
