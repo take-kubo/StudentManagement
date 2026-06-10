@@ -15,7 +15,7 @@ import raisetech.StudentManagement.data.StudentsCourses;
 public class StudentDetail {
 
   @Valid
-  private Student student;
+  private Student student = new Student();
 
   @Valid
   private List<StudentsCourses> studentsCourses = new ArrayList<>();
