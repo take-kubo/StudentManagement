@@ -64,7 +64,7 @@ public class StudentController {
     }
 
     if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.set(0, new StudentsCourses());
+      studentsCoursesList.add(new StudentsCourses());
     }
 
     service.registerStudentInfo(student, studentsCoursesList.get(0));
