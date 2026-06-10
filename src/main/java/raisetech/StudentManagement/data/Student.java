@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 public class Student {
 
-  @Size(min = 36, max = 36, message = "UUIDは３６桁です。")
   private String id;
 
   @NotNull
