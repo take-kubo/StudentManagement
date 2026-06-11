@@ -18,6 +18,6 @@ public class StudentDetail {
   private Student student = new Student();
 
   @Valid
-  private List<StudentsCourses> studentsCourses = new ArrayList<>();
+  private List<StudentsCourses> studentsCourses = new ArrayList<>(List.of(new StudentsCourses()));
 
 }
