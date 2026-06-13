@@ -67,7 +67,7 @@ public class StudentController {
       studentsCoursesList.add(new StudentsCourses());
     }
 
-    service.registerStudentInfo(student, studentsCoursesList.get(0));
+    service.registerStudentInfo(student, studentsCoursesList.getFirst());
 
     return "redirect:/studentList";
   }
