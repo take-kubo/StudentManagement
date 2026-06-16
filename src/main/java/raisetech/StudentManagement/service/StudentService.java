@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
 import raisetech.StudentManagement.domain.StudentDetail;
@@ -36,6 +37,7 @@ public class StudentService {
     return repository.searchStudentCourses(id);
   }
 
+  @Transactional
   public void registerStudentInfo(Student student, StudentsCourses studentsCourses) {
 
     // 受講生情報登録用のUUID生成
