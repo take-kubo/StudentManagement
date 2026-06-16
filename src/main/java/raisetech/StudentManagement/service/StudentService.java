@@ -1,5 +1,6 @@
 package raisetech.StudentManagement.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,12 @@ public class StudentService {
 
     // 受講生のIDを受講生コース情報に代入
     studentsCourses.setStudentId(student.getId());
+
+    // 受講開始日（＝登録日）を代入
+    studentsCourses.setCourseStartAt(LocalDateTime.now());
+
+    // 受講終了予定日（＝登録日の１年後）を代入
+    studentsCourses.setCourseEndAt(LocalDateTime.now().plusYears(1));
 
     // リポジトリを呼び出してデータベースに登録
     repository.registerStudent(student);
