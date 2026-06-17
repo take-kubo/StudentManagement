@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentsCourses;
+import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 
@@ -31,14 +31,14 @@ public class StudentController {
   @GetMapping("/studentList")
   public String getStudentList(Model model) {
     List<Student> students = service.searchStudentList();
-    List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
+    List<StudentCourse> studentsCourses = service.searchStudentsCourseList();
 
     model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
     return "studentList";
   }
 
   @GetMapping("/studentsCourseList")
-  public List<StudentsCourses> getStudentsCourseList() {
+  public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
   }
 
@@ -57,14 +57,14 @@ public class StudentController {
     }
 
     Student student = studentDetail.getStudent();
-    List<StudentsCourses> studentsCoursesList = studentDetail.getStudentsCourses();
+    List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
 
     if (studentsCoursesList == null) {
       studentsCoursesList = new ArrayList<>();
     }
 
     if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.add(new StudentsCourses());
+      studentsCoursesList.add(new StudentCourse());
     }
 
     service.registerStudentInfo(student, studentsCoursesList.getFirst());
