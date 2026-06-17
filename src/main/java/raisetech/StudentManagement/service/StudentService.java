@@ -2,7 +2,6 @@ package raisetech.StudentManagement.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,25 +39,15 @@ public class StudentService {
   @Transactional
   public void registerStudentInfo(Student student, StudentsCourses studentsCourses) {
 
-    // 受講生情報登録用のUUID生成
-    String studentsUuid = UUID.randomUUID().toString();
-    student.setId(studentsUuid);
-
-    // 受講生コース情報登録用のUUID生成
-    String studentsCoursesUuid = UUID.randomUUID().toString();
-    studentsCourses.setId(studentsCoursesUuid);
-
-    // 受講生のIDを受講生コース情報に代入
-    studentsCourses.setStudentId(student.getId());
-
-    // 受講開始日（＝登録日）を代入
-    studentsCourses.setCourseStartAt(LocalDateTime.now());
-
-    // 受講終了予定日（＝登録日の１年後）を代入
-    studentsCourses.setCourseEndAt(LocalDateTime.now().plusYears(1));
-
-    // リポジトリを呼び出してデータベースに登録
+    // 受講生情報をデータベースに登録
     repository.registerStudent(student);
+
+    // 受講生コース情報の必要な値を設定
+    studentsCourses.setStudentId(student.getId());    // 受講生のIDを受講生コース情報に代入
+    studentsCourses.setCourseStartAt(LocalDateTime.now());    // 受講開始日（＝登録日）を代入
+    studentsCourses.setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
+
+    // 受講生コース情報をデータベースに登録
     repository.registerStudentCourse(studentsCourses);
   }
 
