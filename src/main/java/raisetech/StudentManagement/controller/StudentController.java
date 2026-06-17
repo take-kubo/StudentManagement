@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
@@ -46,6 +47,14 @@ public class StudentController {
   public String newStudent(Model model) {
     model.addAttribute("studentDetail", new StudentDetail());
     return "registerStudent";
+  }
+
+  @GetMapping("/updateStudent")
+  public String updateStudent(@RequestParam String name, Model model) {
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.getStudent().setName(name);
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
   }
 
   @PostMapping("/registerStudent")
