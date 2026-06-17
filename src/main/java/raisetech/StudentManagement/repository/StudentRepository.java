@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.SelectKey;
 import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentsCourses;
+import raisetech.StudentManagement.data.StudentCourse;
 
 @Mapper
 public interface StudentRepository {
@@ -17,7 +17,7 @@ public interface StudentRepository {
   List<Student> searchStudents();
 
   @Select("SELECT * FROM students_courses")
-  List<StudentsCourses> searchStudentsCourses();
+  List<StudentCourse> searchStudentsCourses();
 
   @Select("SELECT * FROM students WHERE id = #{id}")
   Student searchStudent(@Param("id") String id);
@@ -39,15 +39,15 @@ public interface StudentRepository {
 
   @Insert({
       "INSERT INTO students_courses(id, student_id, course_name, course_start_at, course_end_at)",
-      "VALUES(#{studentsCourses.id}, #{studentsCourses.studentId}, #{studentsCourses.courseName},"
-          + " #{studentsCourses.courseStartAt}, #{studentsCourses.courseEndAt})"})
+      "VALUES(#{studentCourse.id}, #{studentCourse.studentId}, #{studentCourse.courseName},"
+          + " #{studentCourse.courseStartAt}, #{studentCourse.courseEndAt})"})
   @SelectKey(
       statement = "SELECT UUID()",
-      keyProperty = "studentsCourses.id",
+      keyProperty = "studentCourse.id",
       before = true,
       resultType = String.class
   )
-  void registerStudentCourse(@Param("studentsCourses") StudentsCourses studentsCourses);
+  void registerStudentCourse(@Param("studentCourse") StudentCourse studentCourse);
 
   @Update(
       "UPDATE students SET id=#{id}, name=#{name}, furigana=#{furigana}, nickname=#{nickname}, email=#{email},"
