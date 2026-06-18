@@ -53,6 +53,7 @@ public class StudentController {
   public String updateStudent(@RequestParam String id, Model model) {
     StudentDetail studentDetail = new StudentDetail();
     studentDetail.setStudent(service.searchStudent(id));
+    studentDetail.setStudentsCourses(service.searchStudentCourseList(id));
     model.addAttribute("studentDetail", studentDetail);
     return "updateStudent";
   }
