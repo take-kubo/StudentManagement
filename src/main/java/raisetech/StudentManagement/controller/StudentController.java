@@ -81,4 +81,27 @@ public class StudentController {
 
     return "redirect:/studentList";
   }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute @Valid StudentDetail studentDetail,
+      BindingResult result) {
+
+    if (result.hasErrors()) {
+      return "updateStudent";
+    }
+
+    List<StudentsCourses> studentsCoursesList = studentDetail.getStudentsCourses();
+
+    if (studentsCoursesList == null) {
+      studentsCoursesList = new ArrayList<>();
+    }
+
+    if (studentsCoursesList.isEmpty()) {
+      studentsCoursesList.add(new StudentsCourses());
+    }
+
+    service.updateStudentInfo(studentDetail);
+
+    return "redirect:/studentList";
+  }
 }
