@@ -30,6 +30,10 @@ public class StudentService {
     return repository.searchStudent(id);
   }
 
+  public List<StudentsCourses> searchStudentCourseList(String id) {
+    return repository.searchStudentCourses(id);
+  }
+
   public void registerStudentInfo(Student student, StudentsCourses studentsCourses) {
 
     // 受講生情報登録用のUUID生成
