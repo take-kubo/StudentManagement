@@ -50,9 +50,9 @@ public class StudentController {
   }
 
   @GetMapping("/updateStudent")
-  public String updateStudent(@RequestParam String name, Model model) {
+  public String updateStudent(@RequestParam String id, Model model) {
     StudentDetail studentDetail = new StudentDetail();
-    studentDetail.getStudent().setName(name);
+    studentDetail.setStudent(service.searchStudent(id));
     model.addAttribute("studentDetail", studentDetail);
     return "updateStudent";
   }
