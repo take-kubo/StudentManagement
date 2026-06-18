@@ -5,7 +5,10 @@
 </head>
 <body>
 <h1>受講生登録</h1>
-<form data-th-action="@{/registerStudent}" data-th-object="${studentDetail}" method="post">
+<form data-th-action="@{/updateStudent}" data-th-object="${studentDetail}" method="post">
+  <div>
+    <input type="hidden" id="id" data-th-field="*{student.id}" readonly required/>
+  </div>
   <div>
     <label for="name">名前</label>
     <input type="text" id="name" data-th-field="*{student.name}" required/>
@@ -44,6 +47,16 @@
            data-th-field="*{student.deleted}"/>
   </div>
   <div data-th-each="studentCourse, stat : ${studentDetail.studentsCourses}">
+    <div>
+      <input type="hidden" id="courseId"
+             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].id}"
+             readonly required/>
+    </div>
+    <div>
+      <input type="hidden" id="studentId"
+             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].studentId}"
+             readonly required/>
+    </div>
     <div>
       <label for="courseName">コース名</label>
       <input type="text" id="courseName"
