@@ -45,6 +45,6 @@ public class Student {
   @Size(max = 5000, message = "備考は０文字以上５０００文字以下です。")
   private String remark = "";
 
-  private boolean isDeleted = false;
+  private boolean deleted = false;
 
 }
