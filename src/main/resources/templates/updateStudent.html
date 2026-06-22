@@ -46,32 +46,32 @@
     <input type="checkbox" id="isDeleted"
            data-th-field="*{student.deleted}"/>
   </div>
-  <div data-th-each="studentCourse, stat : ${studentDetail.studentsCourses}">
+  <div data-th-each="studentCourse, stat : *{studentsCourses}">
     <div>
       <input type="hidden" id="courseId"
-             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].id}"
+             data-th-field="*{studentsCourses[__${stat.index}__].id}"
              readonly required/>
     </div>
     <div>
       <input type="hidden" id="studentId"
-             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].studentId}"
+             data-th-field="*{studentsCourses[__${stat.index}__].studentId}"
              readonly required/>
     </div>
     <div>
       <label for="courseName">コース名</label>
       <input type="text" id="courseName"
-             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].courseName}"
+             data-th-field="*{studentsCourses[__${stat.index}__].courseName}"
              required/>
     </div>
     <div>
       <label for="courseStartAt">受講開始日</label>
       <input type="datetime-local" id="courseStartAt"
-             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].courseStartAt}"/>
+             data-th-field="*{studentsCourses[__${stat.index}__].courseStartAt}"/>
     </div>
     <div>
       <label for="courseEndAt">受講終了予定日</label>
       <input type="datetime-local" id="courseEndAt"
-             data-th-field="${studentDetail.studentsCourses[__${stat.index}__].courseEndAt}"/>
+             data-th-field="*{studentsCourses[__${stat.index}__].courseEndAt}"/>
     </div>
   </div>
   <div>
