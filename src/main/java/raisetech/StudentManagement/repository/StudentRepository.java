@@ -26,7 +26,7 @@ public interface StudentRepository {
   List<StudentCourse> searchStudentCourses(@Param("id") String id);
 
   @Insert({
-      "INSERT INTO students(id, name, furigana, nickname, email, address, age, gender, remark, is_deleted)",
+      "INSERT INTO students(id, name, furigana, nickname, email, address, age, gender, remark, deleted)",
       "VALUES(#{student.id}, #{student.name}, #{student.furigana}, #{student.nickname}, #{student.email}, "
           + "#{student.address}, #{student.age}, #{student.gender}, #{student.remark}, false)"})
   @SelectKey(
