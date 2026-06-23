@@ -5,8 +5,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.annotations.Update;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 
@@ -23,7 +23,7 @@ public interface StudentRepository {
   Student searchStudent(@Param("id") String id);
 
   @Select("SELECT * FROM students_courses WHERE student_id = #{id}")
-  List<StudentsCourses> searchStudentCourses(@Param("id") String id);
+  List<StudentCourse> searchStudentCourses(@Param("id") String id);
 
   @Insert({
       "INSERT INTO students(id, name, furigana, nickname, email, address, age, gender, remark, is_deleted)",
@@ -59,5 +59,5 @@ public interface StudentRepository {
       "UPDATE students_courses "
           + "SET course_name=#{courseName}, course_start_at=#{courseStartAt}, course_end_at=#{courseEndAt}"
           + "WHERE id=#{id}")
-  void updateStudentCourse(StudentsCourses studentsCourses);
+  void updateStudentCourse(StudentCourse studentsCourses);
 }

@@ -90,14 +90,14 @@ public class StudentController {
       return "updateStudent";
     }
 
-    List<StudentsCourses> studentsCoursesList = studentDetail.getStudentsCourses();
+    List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
 
     if (studentsCoursesList == null) {
       studentsCoursesList = new ArrayList<>();
     }
 
     if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.add(new StudentsCourses());
+      studentsCoursesList.add(new StudentCourse());
     }
 
     service.updateStudentInfo(studentDetail);
