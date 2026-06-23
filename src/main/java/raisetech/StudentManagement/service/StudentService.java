@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
+import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.repository.StudentRepository;
 
 @Service
@@ -26,6 +27,14 @@ public class StudentService {
     return repository.searchStudentsCourses();
   }
 
+  public Student searchStudent(String id) {
+    return repository.searchStudent(id);
+  }
+
+  public List<StudentsCourses> searchStudentCourseList(String id) {
+    return repository.searchStudentCourses(id);
+  }
+
   public void registerStudentInfo(Student student, StudentsCourses studentsCourses) {
 
     // 受講生情報登録用のUUID生成
@@ -43,4 +52,12 @@ public class StudentService {
     repository.registerStudent(student);
     repository.registerStudentCourse(studentsCourses);
   }
+
+  public void updateStudentInfo(StudentDetail studentDetail) {
+    repository.updateStudent(studentDetail.getStudent());
+    for (StudentsCourses studentCourse : studentDetail.getStudentsCourses()) {
+      repository.updateStudentCourse(studentCourse);
+    }
+  }
+
 }

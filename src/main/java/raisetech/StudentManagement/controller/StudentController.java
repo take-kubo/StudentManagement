@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
@@ -48,6 +49,15 @@ public class StudentController {
     return "registerStudent";
   }
 
+  @GetMapping("/updateStudent")
+  public String updateStudent(@RequestParam String id, Model model) {
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(service.searchStudent(id));
+    studentDetail.setStudentsCourses(service.searchStudentCourseList(id));
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
+  }
+
   @PostMapping("/registerStudent")
   public String registerStudent(@ModelAttribute @Valid StudentDetail studentDetail,
       BindingResult result) {
@@ -68,6 +78,29 @@ public class StudentController {
     }
 
     service.registerStudentInfo(student, studentsCoursesList.getFirst());
+
+    return "redirect:/studentList";
+  }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute @Valid StudentDetail studentDetail,
+      BindingResult result) {
+
+    if (result.hasErrors()) {
+      return "updateStudent";
+    }
+
+    List<StudentsCourses> studentsCoursesList = studentDetail.getStudentsCourses();
+
+    if (studentsCoursesList == null) {
+      studentsCoursesList = new ArrayList<>();
+    }
+
+    if (studentsCoursesList.isEmpty()) {
+      studentsCoursesList.add(new StudentsCourses());
+    }
+
+    service.updateStudentInfo(studentDetail);
 
     return "redirect:/studentList";
   }
