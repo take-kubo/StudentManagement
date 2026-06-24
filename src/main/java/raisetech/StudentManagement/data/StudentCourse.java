@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StudentsCourses {
+public class StudentCourse {
 
   String id = "";
 

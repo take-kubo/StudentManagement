@@ -6,7 +6,7 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentsCourses;
+import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
 
 /**
@@ -30,7 +30,7 @@ public class StudentConverter {
    * @throws NullPointerException 受講生情報のIDがnullの場合
    */
   public List<StudentDetail> convertStudentDetails(List<Student> students,
-      List<StudentsCourses> studentsCourses) throws NullPointerException {
+      List<StudentCourse> studentsCourses) throws NullPointerException {
 
     // 受講生コース情報のリストがnullでないかチェックしています
     // nullだった場合は初期化された受講生コース情報をひとつ持つリストにしています
@@ -40,7 +40,7 @@ public class StudentConverter {
       log.error(
           "The studentsCourses list is null.",
           error);
-      StudentsCourses emptyStudentsCourse = new StudentsCourses();
+      StudentCourse emptyStudentsCourse = new StudentCourse();
       studentsCourses = List.of(emptyStudentsCourse);
     }
 
@@ -61,8 +61,8 @@ public class StudentConverter {
         throw new NullPointerException();
       }
 
-      List<StudentsCourses> convertStudentCourses = new ArrayList<>();
-      for (StudentsCourses studentCourse : studentsCourses) {
+      List<StudentCourse> convertStudentCourses = new ArrayList<>();
+      for (StudentCourse studentCourse : studentsCourses) {
 
         if (student.getId().equals(studentCourse.getStudentId())) {
           convertStudentCourses.add(studentCourse);

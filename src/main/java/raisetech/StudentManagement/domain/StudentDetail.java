@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentsCourses;
+import raisetech.StudentManagement.data.StudentCourse;
 
 @Getter
 @Setter
@@ -18,6 +18,6 @@ public class StudentDetail {
   private Student student = new Student();
 
   @Valid
-  private List<StudentsCourses> studentsCourses = new ArrayList<>(List.of(new StudentsCourses()));
+  private List<StudentCourse> studentsCourses = new ArrayList<>(List.of(new StudentCourse()));
 
 }
