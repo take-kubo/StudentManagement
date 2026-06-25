@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
@@ -49,8 +49,8 @@ public class StudentController {
     return "registerStudent";
   }
 
-  @GetMapping("/updateStudent")
-  public String updateStudent(@RequestParam String id, Model model) {
+  @GetMapping("/updateStudent/{id}")
+  public String updateStudent(@PathVariable String id, Model model) {
     StudentDetail studentDetail = new StudentDetail();
     studentDetail.setStudent(service.searchStudent(id));
     studentDetail.setStudentsCourses(service.searchStudentCourseList(id));
@@ -77,6 +77,11 @@ public class StudentController {
       studentsCoursesList.add(new StudentCourse());
     }
 
+    /*
+     studentsCoursesList.getFirst()について：
+     このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
+     get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
+    */
     service.registerStudentInfo(student, studentsCoursesList.getFirst());
 
     return "redirect:/studentList";

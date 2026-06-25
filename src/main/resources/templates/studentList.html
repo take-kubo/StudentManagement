@@ -24,7 +24,7 @@
     <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.id}">1</td>
     <td rowspan="*{studentsCourses.size()}">
       <a data-th-text="${studentDetail.student.name}"
-         data-th-href="@{http://localhost:8080/updateStudent(id=${studentDetail.student.id})}">山田太郎</a>
+         data-th-href="@{/updateStudent/{id}(id=${studentDetail.student.id})}">山田太郎</a>
     </td>
     <td rowspan="*{studentsCourses.size()}" data-th-text="${studentDetail.student.furigana}">
       ヤマダタロウ

@@ -13,13 +13,13 @@ import raisetech.StudentManagement.data.StudentCourse;
 @Mapper
 public interface StudentRepository {
 
-  @Select("SELECT * FROM students")
+  @Select("SELECT * FROM students WHERE deleted = false")
   List<Student> searchStudents();
 
   @Select("SELECT * FROM students_courses")
   List<StudentCourse> searchStudentsCourses();
 
-  @Select("SELECT * FROM students WHERE id = #{id}")
+  @Select("SELECT * FROM students WHERE id = #{id} AND deleted = false")
   Student searchStudent(@Param("id") String id);
 
   @Select("SELECT * FROM students_courses WHERE student_id = #{id}")
