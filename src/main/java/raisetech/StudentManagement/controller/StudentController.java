@@ -77,6 +77,11 @@ public class StudentController {
       studentsCoursesList.add(new StudentCourse());
     }
 
+    /*
+     studentsCoursesList.getFirst()について：
+     このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
+     get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
+    */
     service.registerStudentInfo(student, studentsCoursesList.getFirst());
 
     return "redirect:/studentList";
