@@ -28,14 +28,6 @@ public class StudentService {
     return repository.searchStudentsCourses();
   }
 
-  public Student searchStudent(String id) {
-    return repository.searchStudent(id);
-  }
-
-  public List<StudentCourse> searchStudentCourseList(String id) {
-    return repository.searchStudentCourses(id);
-  }
-
   @Transactional
   public void registerStudentInfo(Student student, StudentCourse studentCourse) {
 
