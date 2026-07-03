@@ -52,11 +52,19 @@ public class StudentService {
   }
 
   @Transactional
-  public void updateStudentInfo(StudentDetail studentDetail) {
-    repository.updateStudent(studentDetail.getStudent());
-    for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
-      repository.updateStudentCourse(studentCourse);
+  public boolean updateStudentInfo(StudentDetail studentDetail) {
+
+    if (repository.searchStudent(studentDetail.getStudent().getId()) != null) {
+      repository.updateStudent(studentDetail.getStudent());
+      for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
+        repository.updateStudentCourse(studentCourse);
+      }
+      return true;
+    } else {
+      return false;
     }
+
+
   }
 
 }

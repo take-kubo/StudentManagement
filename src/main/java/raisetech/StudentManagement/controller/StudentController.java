@@ -84,7 +84,7 @@ public class StudentController {
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
     studentDetail.getStudent().setId(id);
-    
+
     List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
 
     if (studentsCoursesList == null) {
@@ -95,8 +95,13 @@ public class StudentController {
       studentsCoursesList.add(new StudentCourse());
     }
 
-    service.updateStudentInfo(studentDetail);
+    if (service.updateStudentInfo(studentDetail)) {
 
-    return ResponseEntity.ok("更新処理が成功しました。");
+      return ResponseEntity.ok(
+          "{\"message\" : \"更新が成功しました。\", \"id\":\"" + id + "\"}");
+    } else {
+      return ResponseEntity.noContent().build();
+    }
+
   }
 }
