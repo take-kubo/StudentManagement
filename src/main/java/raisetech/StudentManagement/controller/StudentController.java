@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,9 +79,12 @@ public class StudentController {
     return "redirect:/studentList";
   }
 
-  @PutMapping("/updateStudent")
-  public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
+  @PutMapping("/student/{id}")
+  public ResponseEntity<String> updateStudent(
+      @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
+    studentDetail.getStudent().setId(id);
+    
     List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
 
     if (studentsCoursesList == null) {
