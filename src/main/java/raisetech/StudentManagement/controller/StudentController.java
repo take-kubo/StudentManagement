@@ -32,14 +32,14 @@ public class StudentController {
     this.converter = converter;
   }
 
-  @GetMapping("/studentList")
+  @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     List<Student> students = service.searchStudentList();
     List<StudentCourse> studentsCourses = service.searchStudentsCourseList();
     return converter.convertStudentDetails(students, studentsCourses);
   }
 
-  @GetMapping("/studentsCourseList")
+  @GetMapping("/studentsCourses")
   public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
   }
@@ -76,10 +76,10 @@ public class StudentController {
     */
     service.registerStudentInfo(student, studentsCoursesList.getFirst());
 
-    return "redirect:/studentList";
+    return "redirect:/students";
   }
 
-  @PutMapping("/student/{id}")
+  @PutMapping("/students/{id}")
   public ResponseEntity<String> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
