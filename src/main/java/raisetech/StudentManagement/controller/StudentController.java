@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -96,11 +97,9 @@ public class StudentController {
     }
 
     if (service.updateStudentInfo(studentDetail)) {
-
-      return ResponseEntity.ok(
-          "{\"message\" : \"更新が成功しました。\", \"id\":\"" + id + "\"}");
+      return ResponseEntity.status(HttpStatus.OK).body("Update success");
     } else {
-      return ResponseEntity.noContent().build();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
     }
 
   }
