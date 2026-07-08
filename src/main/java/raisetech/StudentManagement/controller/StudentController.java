@@ -6,10 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,29 +42,15 @@ public class StudentController {
     return service.searchStudentsCourseList();
   }
 
-  @GetMapping("/newStudent")
-  public String newStudent(Model model) {
-    model.addAttribute("studentDetail", new StudentDetail());
-    return "registerStudent";
-  }
-
-  @PostMapping("/registerStudent")
-  public String registerStudent(@ModelAttribute @Valid StudentDetail studentDetail,
-      BindingResult result) {
-
-    if (result.hasErrors()) {
-      return "registerStudent";
-    }
+  @PostMapping("/students")
+  public ResponseEntity<String> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
     Student student = studentDetail.getStudent();
-    List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
 
-    if (studentsCoursesList == null) {
-      studentsCoursesList = new ArrayList<>();
-    }
-
-    if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.add(new StudentCourse());
+    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
+        .isEmpty()) {
+      studentDetail.setStudentsCourses(new ArrayList<>());
+      studentDetail.getStudentsCourses().add(new StudentCourse());
     }
 
     /*
@@ -75,9 +58,9 @@ public class StudentController {
      このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
      get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
     */
-    service.registerStudentInfo(student, studentsCoursesList.getFirst());
+    service.registerStudentInfo(student, studentDetail.getStudentsCourses().getFirst());
 
-    return "redirect:/students";
+    return ResponseEntity.status(HttpStatus.OK).body("Register success");
   }
 
   @PutMapping("/students/{id}")
