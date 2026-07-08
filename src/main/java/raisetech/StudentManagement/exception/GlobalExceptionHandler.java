@@ -1,10 +1,13 @@
 package raisetech.StudentManagement.exception;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import raisetech.StudentManagement.data.ErrorDTO;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,11 +20,18 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<FieldError> methodArgumentNotValidExceptionHandler(
+  public ResponseEntity<List<ErrorDTO>> methodArgumentNotValidExceptionHandler(
       MethodArgumentNotValidException e) {
-    return ResponseEntity
-        .badRequest()
-        .body(e.getFieldError());
+
+    List<ErrorDTO> errors = new ArrayList<>();
+
+    for (FieldError fieldError : e.getFieldErrors()) {
+      ErrorDTO error = new ErrorDTO(fieldError.getField(), fieldError.getDefaultMessage(),
+          fieldError.getRejectedValue());
+      errors.add(error);
+    }
+
+    return ResponseEntity.badRequest().body(errors);
   }
 
 }
