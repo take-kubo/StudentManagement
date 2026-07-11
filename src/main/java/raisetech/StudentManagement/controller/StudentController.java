@@ -39,7 +39,7 @@ public class StudentController {
     return converter.convertStudentDetails(students, studentsCourses);
   }
 
-  @GetMapping("/studentsCourses")
+  @GetMapping("/courses")
   public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
   }
