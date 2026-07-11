@@ -29,10 +29,14 @@ public class StudentService {
   }
 
   @Transactional
-  public void registerStudentInfo(Student student, StudentCourse studentCourse) {
+  public boolean registerStudentInfo(Student student, StudentCourse studentCourse) {
 
     // 受講生情報をデータベースに登録
-    repository.registerStudent(student);
+    if (student.getName() != null && student.getNickname() != null && student.getEmail() != null) {
+      repository.registerStudent(student);
+    } else {
+      return false;
+    }
 
     // 受講生コース情報の必要な値を設定
     studentCourse.setStudentId(student.getId());    // 受講生のIDを受講生コース情報に代入
@@ -40,7 +44,13 @@ public class StudentService {
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
 
     // 受講生コース情報をデータベースに登録
-    repository.registerStudentCourse(studentCourse);
+    if (studentCourse.getCourseName() != null) {
+      repository.registerStudentCourse(studentCourse);
+    } else {
+      return false;
+    }
+
+    return true;
   }
 
   @Transactional

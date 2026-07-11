@@ -1,6 +1,7 @@
 package raisetech.StudentManagement.controller;
 
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
@@ -45,8 +47,6 @@ public class StudentController {
   @PostMapping("/students")
   public ResponseEntity<String> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
-    Student student = studentDetail.getStudent();
-
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
       studentDetail.setStudentsCourses(new ArrayList<>());
@@ -58,9 +58,15 @@ public class StudentController {
      このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
      get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
     */
-    service.registerStudentInfo(student, studentDetail.getStudentsCourses().getFirst());
+    if (service.registerStudentInfo(studentDetail.getStudent(),
+        studentDetail.getStudentsCourses().getFirst())) {
+      URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+          .buildAndExpand(studentDetail.getStudent().getId()).toUri();
+      return ResponseEntity.status(HttpStatus.CREATED).location(uri).body("Register success");
+    } else {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Illegal request");
+    }
 
-    return ResponseEntity.status(HttpStatus.OK).body("Register success");
   }
 
   @PutMapping("/students/{id}")
@@ -69,18 +75,14 @@ public class StudentController {
 
     studentDetail.getStudent().setId(id);
 
-    List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
-
-    if (studentsCoursesList == null) {
-      studentsCoursesList = new ArrayList<>();
-    }
-
-    if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.add(new StudentCourse());
+    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
+        .isEmpty()) {
+      studentDetail.setStudentsCourses(new ArrayList<>());
+      studentDetail.getStudentsCourses().add(new StudentCourse());
     }
 
     if (service.updateStudentInfo(studentDetail)) {
-      return ResponseEntity.status(HttpStatus.OK).body("Update success");
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
     }
