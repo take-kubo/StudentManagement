@@ -61,16 +61,15 @@ public class StudentController {
      このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
      get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
     */
-    if (service.registerStudentInfo(studentDetail.getStudent(),
+    if (!service.registerStudentInfo(studentDetail.getStudent(),
         studentDetail.getStudentsCourses().getFirst())) {
-      URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-          .buildAndExpand(studentDetail.getStudent().getId()).toUri();
-      SuccessDTO successDTO = new SuccessDTO("Register success.",
-          studentDetail.getStudent().getId());
-      return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
-    } else {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Illegal request");
     }
+
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        .buildAndExpand(studentDetail.getStudent().getId()).toUri();
+    SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
+    return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
 
   }
 
@@ -86,12 +85,12 @@ public class StudentController {
       studentDetail.getStudentsCourses().add(new StudentCourse());
     }
 
-    if (service.updateStudentInfo(studentDetail)) {
-      SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
-      return ResponseEntity.status(HttpStatus.OK).body(successDTO);
-    } else {
+    if (!service.updateStudentInfo(studentDetail)) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
     }
+
+    SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
+    return ResponseEntity.status(HttpStatus.OK).body(successDTO);
 
   }
 }
