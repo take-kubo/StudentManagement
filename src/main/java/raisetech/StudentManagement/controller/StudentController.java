@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 
+@Slf4j
 @RestController
 public class StudentController {
 
@@ -45,7 +48,7 @@ public class StudentController {
   }
 
   @PostMapping("/students")
-  public ResponseEntity<String> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
+  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
@@ -62,7 +65,9 @@ public class StudentController {
         studentDetail.getStudentsCourses().getFirst())) {
       URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
           .buildAndExpand(studentDetail.getStudent().getId()).toUri();
-      return ResponseEntity.status(HttpStatus.CREATED).location(uri).body("Register success");
+      SuccessDTO successDTO = new SuccessDTO("Register success.",
+          studentDetail.getStudent().getId());
+      return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
     } else {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Illegal request");
     }
@@ -70,7 +75,7 @@ public class StudentController {
   }
 
   @PutMapping("/students/{id}")
-  public ResponseEntity<String> updateStudent(
+  public ResponseEntity<Object> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
     studentDetail.getStudent().setId(id);
@@ -82,7 +87,8 @@ public class StudentController {
     }
 
     if (service.updateStudentInfo(studentDetail)) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
+      return ResponseEntity.status(HttpStatus.OK).body(successDTO);
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
     }
