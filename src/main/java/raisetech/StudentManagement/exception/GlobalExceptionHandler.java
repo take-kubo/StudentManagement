@@ -36,13 +36,13 @@ public class GlobalExceptionHandler {
     errorInfo.put("path", request.getRequestURI());
     errors.add(errorInfo);
 
-    for (ObjectError objectError : e.getGlobalErrors()) {
+    for (ObjectError objectError : e.getBindingResult().getGlobalErrors()) {
       GlobalErrorDTO error = new GlobalErrorDTO(objectError.getObjectName(),
           objectError.getDefaultMessage());
       errors.add(error);
     }
 
-    for (FieldError fieldError : e.getFieldErrors()) {
+    for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
       FieldErrorDTO error = new FieldErrorDTO(fieldError.getField(), fieldError.getDefaultMessage(),
           fieldError.getRejectedValue());
       errors.add(error);
