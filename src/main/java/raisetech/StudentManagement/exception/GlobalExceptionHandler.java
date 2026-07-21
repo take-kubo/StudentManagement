@@ -30,9 +30,9 @@ public class GlobalExceptionHandler {
 
     ArrayList<Object> errors = new ArrayList<>();
 
-    Map<String, String> errorInfo = new HashMap<>();
+    Map<String, Object> errorInfo = new HashMap<>();
     errorInfo.put("timestamp", LocalDateTime.now().toString());
-    errorInfo.put("status", e.getStatusCode().toString());
+    errorInfo.put("status", 400);
     errorInfo.put("path", request.getRequestURI());
     errors.add(errorInfo);
 
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
       errors.add(error);
     }
 
-    return ResponseEntity.badRequest().body(errors);
+    return ResponseEntity.status(400).body(errors);
   }
 
 }
