@@ -3,7 +3,7 @@ package raisetech.StudentManagement.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,13 +28,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Object> methodArgumentNotValidExceptionHandler(
       MethodArgumentNotValidException e, HttpServletRequest request) {
 
-    ArrayList<Object> errors = new ArrayList<>();
-
-    Map<String, Object> errorInfo = new HashMap<>();
+    Map<String, Object> errorInfo = new LinkedHashMap<>();
     errorInfo.put("timestamp", LocalDateTime.now().toString());
     errorInfo.put("status", 400);
     errorInfo.put("path", request.getRequestURI());
-    errors.add(errorInfo);
+
+    ArrayList<Object> errors = new ArrayList<>();
 
     for (ObjectError objectError : e.getBindingResult().getGlobalErrors()) {
       GlobalErrorDTO error = new GlobalErrorDTO(objectError.getObjectName(),
@@ -48,7 +47,9 @@ public class GlobalExceptionHandler {
       errors.add(error);
     }
 
-    return ResponseEntity.status(400).body(errors);
+    errorInfo.put("errors", errors);
+
+    return ResponseEntity.status(400).body(errorInfo);
   }
 
 }
