@@ -53,7 +53,8 @@ public class StudentController {
   }
 
   @PostMapping("/students")
-  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
+  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail,
+      HttpServletRequest request) {
 
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
@@ -68,7 +69,18 @@ public class StudentController {
     */
     if (!service.registerStudentInfo(studentDetail.getStudent(),
         studentDetail.getStudentsCourses().getFirst())) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Illegal request");
+
+      Map<String, Object> errorInfo = new LinkedHashMap<>();
+      errorInfo.put("timestamp", LocalDateTime.now().toString());
+      errorInfo.put("status", 400);
+      errorInfo.put("path", request.getRequestURI());
+
+      ArrayList<Object> errors = new ArrayList<>();
+      FieldErrorDTO error = new FieldErrorDTO("", "Illegal Request", "");
+      errors.add(error);
+      errorInfo.put("errors", errors);
+
+      return ResponseEntity.status(400).body(errorInfo);
     }
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
