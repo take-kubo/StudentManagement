@@ -1,9 +1,13 @@
 package raisetech.StudentManagement.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
+import raisetech.StudentManagement.data.FieldErrorDTO;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
@@ -75,7 +80,8 @@ public class StudentController {
 
   @PutMapping("/students/{id}")
   public ResponseEntity<Object> updateStudent(
-      @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
+      @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail,
+      HttpServletRequest request) {
 
     studentDetail.getStudent().setId(id);
 
@@ -86,7 +92,18 @@ public class StudentController {
     }
 
     if (!service.updateStudentInfo(studentDetail)) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
+
+      Map<String, Object> errorInfo = new LinkedHashMap<>();
+      errorInfo.put("timestamp", LocalDateTime.now().toString());
+      errorInfo.put("status", 404);
+      errorInfo.put("path", request.getRequestURI());
+
+      ArrayList<Object> errors = new ArrayList<>();
+      FieldErrorDTO error = new FieldErrorDTO("id", "Not Found", id);
+      errors.add(error);
+      errorInfo.put("errors", errors);
+
+      return ResponseEntity.status(404).body(errorInfo);
     }
 
     SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
