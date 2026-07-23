@@ -6,6 +6,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class StudentController {
 
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
-      studentDetail.setStudentsCourses(new ArrayList<>());
+      studentDetail.setStudentsCourses(new LinkedList<>());
       studentDetail.getStudentsCourses().add(new StudentCourse());
     }
 
