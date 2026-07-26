@@ -6,7 +6,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,17 +56,22 @@ public class StudentController {
 
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
-      studentDetail.setStudentsCourses(new LinkedList<>());
-      studentDetail.getStudentsCourses().add(new StudentCourse());
+
+      Map<String, Object> errorInfo = new LinkedHashMap<>();
+      errorInfo.put("timestamp", LocalDateTime.now().toString());
+      errorInfo.put("status", 400);
+      errorInfo.put("path", request.getRequestURI());
+
+      ArrayList<Object> errors = new ArrayList<>();
+      FieldErrorDTO error = new FieldErrorDTO("", "Illegal Request", "");
+      errors.add(error);
+      errorInfo.put("errors", errors);
+
+      return ResponseEntity.status(400).body(errorInfo);
     }
 
-    /*
-     studentsCoursesList.getFirst()について：
-     このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
-     get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
-    */
     if (!service.registerStudentInfo(studentDetail.getStudent(),
-        studentDetail.getStudentsCourses().getFirst())) {
+        studentDetail.getStudentsCourses().get(0))) {
 
       Map<String, Object> errorInfo = new LinkedHashMap<>();
       errorInfo.put("timestamp", LocalDateTime.now().toString());
