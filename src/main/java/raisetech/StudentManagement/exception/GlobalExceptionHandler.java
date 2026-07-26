@@ -1,18 +1,16 @@
 package raisetech.StudentManagement.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import raisetech.StudentManagement.data.FieldErrorDTO;
-import raisetech.StudentManagement.data.GlobalErrorDTO;
+import raisetech.StudentManagement.data.ErrorDetail;
+import raisetech.StudentManagement.service.ErrorResponseBuilder;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,28 +26,22 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Object> methodArgumentNotValidExceptionHandler(
       MethodArgumentNotValidException e, HttpServletRequest request) {
 
-    Map<String, Object> errorInfo = new LinkedHashMap<>();
-    errorInfo.put("timestamp", LocalDateTime.now().toString());
-    errorInfo.put("status", 400);
-    errorInfo.put("path", request.getRequestURI());
-
-    ArrayList<Object> errors = new ArrayList<>();
+    List<ErrorDetail> errorDetails = new ArrayList<>();
 
     for (ObjectError objectError : e.getBindingResult().getGlobalErrors()) {
-      GlobalErrorDTO error = new GlobalErrorDTO(objectError.getObjectName(),
+      ErrorDetail errorDetail = new ErrorDetail(objectError.getObjectName(),
           objectError.getDefaultMessage());
-      errors.add(error);
+      errorDetails.add(errorDetail);
     }
 
     for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-      FieldErrorDTO error = new FieldErrorDTO(fieldError.getField(), fieldError.getDefaultMessage(),
-          fieldError.getRejectedValue());
-      errors.add(error);
+      ErrorDetail errorDetail = new ErrorDetail(fieldError.getField(),
+          fieldError.getDefaultMessage());
+      errorDetails.add(errorDetail);
     }
 
-    errorInfo.put("errors", errors);
-
-    return ResponseEntity.status(400).body(errorInfo);
+    return ResponseEntity.status(400)
+        .body(new ErrorResponseBuilder().build(400, request, errorDetails));
   }
 
 }
