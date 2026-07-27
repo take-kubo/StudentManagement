@@ -16,10 +16,18 @@ import raisetech.StudentManagement.service.ErrorResponseBuilder;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(NullPointerException.class)
-  public ResponseEntity<String> nullPointerExceptionHandler() {
-    return ResponseEntity
-        .internalServerError()
-        .body("システムエラーが発生しました。また再度アクセスしてください。");
+  public ResponseEntity<Object> nullPointerExceptionHandler(NullPointerException e,
+      HttpServletRequest request) {
+
+    List<ErrorDetail> errorDetails = new ArrayList<>();
+
+    ErrorDetail errorDetail = new ErrorDetail("internal",
+        "システムエラーが発生しました。再度アクセスしてください。");
+    errorDetails.add(errorDetail);
+
+    return ResponseEntity.status(500)
+        .body(new ErrorResponseBuilder().build(500, request, errorDetails));
+
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
