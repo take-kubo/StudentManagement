@@ -3,11 +3,7 @@ package raisetech.StudentManagement.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
-import raisetech.StudentManagement.data.FieldErrorDTO;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.IllegalRequestException;
 import raisetech.StudentManagement.service.StudentService;
 
 @RestController
@@ -56,34 +52,14 @@ public class StudentController {
 
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
-
-      Map<String, Object> errorInfo = new LinkedHashMap<>();
-      errorInfo.put("timestamp", LocalDateTime.now().toString());
-      errorInfo.put("status", 400);
-      errorInfo.put("path", request.getRequestURI());
-
-      ArrayList<Object> errors = new ArrayList<>();
-      FieldErrorDTO error = new FieldErrorDTO("", "Illegal Request", "");
-      errors.add(error);
-      errorInfo.put("errors", errors);
-
-      return ResponseEntity.status(400).body(errorInfo);
+      throw new IllegalRequestException("StudentsCoursesList",
+          "受講生コースのリストがnullまたは空です。");
     }
 
     if (!service.registerStudentInfo(studentDetail.getStudent(),
         studentDetail.getStudentsCourses().get(0))) {
-
-      Map<String, Object> errorInfo = new LinkedHashMap<>();
-      errorInfo.put("timestamp", LocalDateTime.now().toString());
-      errorInfo.put("status", 400);
-      errorInfo.put("path", request.getRequestURI());
-
-      ArrayList<Object> errors = new ArrayList<>();
-      FieldErrorDTO error = new FieldErrorDTO("", "Illegal Request", "");
-      errors.add(error);
-      errorInfo.put("errors", errors);
-
-      return ResponseEntity.status(400).body(errorInfo);
+      throw new IllegalRequestException("Student or StudentCourse",
+          "受講生情報をデータベースに登録できませんでした。");
     }
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -102,23 +78,13 @@ public class StudentController {
 
     if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
         .isEmpty()) {
-      studentDetail.setStudentsCourses(new ArrayList<>());
-      studentDetail.getStudentsCourses().add(new StudentCourse());
+      throw new IllegalRequestException("StudentsCoursesList",
+          "受講生コースのリストがnullまたは空です。");
     }
 
     if (!service.updateStudentInfo(studentDetail)) {
-
-      Map<String, Object> errorInfo = new LinkedHashMap<>();
-      errorInfo.put("timestamp", LocalDateTime.now().toString());
-      errorInfo.put("status", 404);
-      errorInfo.put("path", request.getRequestURI());
-
-      ArrayList<Object> errors = new ArrayList<>();
-      FieldErrorDTO error = new FieldErrorDTO("id", "Not Found", id);
-      errors.add(error);
-      errorInfo.put("errors", errors);
-
-      return ResponseEntity.status(404).body(errorInfo);
+      throw new IllegalRequestException("Student or StudentCourse",
+          "受講生情報を更新できませんでした。");
     }
 
     SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
