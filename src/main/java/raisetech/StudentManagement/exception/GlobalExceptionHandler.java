@@ -52,4 +52,19 @@ public class GlobalExceptionHandler {
         .body(new ErrorResponseBuilder().build(400, request, errorDetails));
   }
 
+
+  @ExceptionHandler(IllegalRequestException.class)
+  public ResponseEntity<Object> illegalRequestExceptionHandler(IllegalRequestException e,
+      HttpServletRequest request) {
+
+    List<ErrorDetail> errorDetails = new ArrayList<>();
+
+    ErrorDetail errorDetail = new ErrorDetail(e.getFieldName(), e.getMessage());
+    errorDetails.add(errorDetail);
+
+    return ResponseEntity.status(500)
+        .body(new ErrorResponseBuilder().build(500, request, errorDetails));
+
+  }
+
 }
