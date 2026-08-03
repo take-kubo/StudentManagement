@@ -28,19 +28,15 @@ public class StudentService {
     return repository.searchStudentsCourses();
   }
 
-  public Student searchStudent(String id) {
-    return repository.searchStudent(id);
-  }
-
-  public List<StudentCourse> searchStudentCourseList(String id) {
-    return repository.searchStudentCourses(id);
-  }
-
   @Transactional
-  public void registerStudentInfo(Student student, StudentCourse studentCourse) {
+  public boolean registerStudentInfo(Student student, StudentCourse studentCourse) {
 
     // 受講生情報をデータベースに登録
-    repository.registerStudent(student);
+    if (student.getName() != null && student.getNickname() != null && student.getEmail() != null) {
+      repository.registerStudent(student);
+    } else {
+      return false;
+    }
 
     // 受講生コース情報の必要な値を設定
     studentCourse.setStudentId(student.getId());    // 受講生のIDを受講生コース情報に代入
@@ -48,15 +44,29 @@ public class StudentService {
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
 
     // 受講生コース情報をデータベースに登録
-    repository.registerStudentCourse(studentCourse);
+    if (studentCourse.getCourseName() != null) {
+      repository.registerStudentCourse(studentCourse);
+    } else {
+      return false;
+    }
+
+    return true;
   }
 
   @Transactional
-  public void updateStudentInfo(StudentDetail studentDetail) {
-    repository.updateStudent(studentDetail.getStudent());
-    for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
-      repository.updateStudentCourse(studentCourse);
+  public boolean updateStudentInfo(StudentDetail studentDetail) {
+
+    if (repository.searchStudent(studentDetail.getStudent().getId()) != null) {
+      repository.updateStudent(studentDetail.getStudent());
+      for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
+        repository.updateStudentCourse(studentCourse);
+      }
+      return true;
+    } else {
+      return false;
     }
+
+
   }
 
 }

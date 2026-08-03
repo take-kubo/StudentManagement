@@ -1,23 +1,28 @@
 package raisetech.StudentManagement.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.IllegalRequestException;
 import raisetech.StudentManagement.service.StudentService;
 
-@Controller
+@RestController
 public class StudentController {
 
   private final StudentService service;
@@ -29,84 +34,61 @@ public class StudentController {
     this.converter = converter;
   }
 
-  @GetMapping("/studentList")
-  public String getStudentList(Model model) {
+  @GetMapping("/students")
+  public List<StudentDetail> getStudentList() {
     List<Student> students = service.searchStudentList();
     List<StudentCourse> studentsCourses = service.searchStudentsCourseList();
-
-    model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
-    return "studentList";
+    return converter.convertStudentDetails(students, studentsCourses);
   }
 
-  @GetMapping("/studentsCourseList")
+  @GetMapping("/courses")
   public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
   }
 
-  @GetMapping("/newStudent")
-  public String newStudent(Model model) {
-    model.addAttribute("studentDetail", new StudentDetail());
-    return "registerStudent";
+  @PostMapping("/students")
+  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail,
+      HttpServletRequest request) {
+
+    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
+        .isEmpty()) {
+      throw new IllegalRequestException("StudentsCoursesList",
+          "受講生コースのリストがnullまたは空です。");
+    }
+
+    if (!service.registerStudentInfo(studentDetail.getStudent(),
+        studentDetail.getStudentsCourses().get(0))) {
+      throw new IllegalRequestException("Student or StudentCourse",
+          "受講生情報をデータベースに登録できませんでした。");
+    }
+
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        .buildAndExpand(studentDetail.getStudent().getId()).toUri();
+    SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
+    return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
+
   }
 
-  @GetMapping("/updateStudent/{id}")
-  public String updateStudent(@PathVariable String id, Model model) {
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(service.searchStudent(id));
-    studentDetail.setStudentsCourses(service.searchStudentCourseList(id));
-    model.addAttribute("studentDetail", studentDetail);
-    return "updateStudent";
-  }
+  @PutMapping("/students/{id}")
+  public ResponseEntity<Object> updateStudent(
+      @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail,
+      HttpServletRequest request) {
 
-  @PostMapping("/registerStudent")
-  public String registerStudent(@ModelAttribute @Valid StudentDetail studentDetail,
-      BindingResult result) {
+    studentDetail.getStudent().setId(id);
 
-    if (result.hasErrors()) {
-      return "registerStudent";
+    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
+        .isEmpty()) {
+      throw new IllegalRequestException("StudentsCoursesList",
+          "受講生コースのリストがnullまたは空です。");
     }
 
-    Student student = studentDetail.getStudent();
-    List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
-
-    if (studentsCoursesList == null) {
-      studentsCoursesList = new ArrayList<>();
+    if (!service.updateStudentInfo(studentDetail)) {
+      throw new IllegalRequestException("Student or StudentCourse",
+          "受講生情報を更新できませんでした。");
     }
 
-    if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.add(new StudentCourse());
-    }
+    SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
+    return ResponseEntity.status(HttpStatus.OK).body(successDTO);
 
-    /*
-     studentsCoursesList.getFirst()について：
-     このプロジェクトはJava21で開発しているので、ListにgetFirst()が実装されています
-     get(0)にするとIntelliJが警告をだすので、getFirst()を使っています
-    */
-    service.registerStudentInfo(student, studentsCoursesList.getFirst());
-
-    return "redirect:/studentList";
-  }
-
-  @PostMapping("/updateStudent")
-  public String updateStudent(@ModelAttribute @Valid StudentDetail studentDetail,
-      BindingResult result) {
-
-    if (result.hasErrors()) {
-      return "updateStudent";
-    }
-
-    List<StudentCourse> studentsCoursesList = studentDetail.getStudentsCourses();
-
-    if (studentsCoursesList == null) {
-      studentsCoursesList = new ArrayList<>();
-    }
-
-    if (studentsCoursesList.isEmpty()) {
-      studentsCoursesList.add(new StudentCourse());
-    }
-
-    service.updateStudentInfo(studentDetail);
-
-    return "redirect:/studentList";
   }
 }

@@ -1,7 +1,7 @@
 package raisetech.StudentManagement.domain;
 
 import jakarta.validation.Valid;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ public class StudentDetail {
   private Student student = new Student();
 
   @Valid
-  private List<StudentCourse> studentsCourses = new ArrayList<>(List.of(new StudentCourse()));
+  private List<StudentCourse> studentsCourses = new LinkedList<>(List.of(new StudentCourse()));
 
 }
