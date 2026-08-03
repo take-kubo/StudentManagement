@@ -1,6 +1,5 @@
 package raisetech.StudentManagement.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -19,7 +18,6 @@ import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
-import raisetech.StudentManagement.exception.IllegalRequestException;
 import raisetech.StudentManagement.service.StudentService;
 
 @RestController
@@ -47,20 +45,10 @@ public class StudentController {
   }
 
   @PostMapping("/students")
-  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail,
-      HttpServletRequest request) {
+  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
-    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
-        .isEmpty()) {
-      throw new IllegalRequestException("StudentsCoursesList",
-          "受講生コースのリストがnullまたは空です。");
-    }
-
-    if (!service.registerStudentInfo(studentDetail.getStudent(),
-        studentDetail.getStudentsCourses().get(0))) {
-      throw new IllegalRequestException("Student or StudentCourse",
-          "受講生情報をデータベースに登録できませんでした。");
-    }
+    service.registerStudentInfo(studentDetail.getStudent(),
+        studentDetail.getStudentsCourses().get(0));
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(studentDetail.getStudent().getId()).toUri();
@@ -71,21 +59,11 @@ public class StudentController {
 
   @PutMapping("/students/{id}")
   public ResponseEntity<Object> updateStudent(
-      @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail,
-      HttpServletRequest request) {
+      @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
     studentDetail.getStudent().setId(id);
 
-    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
-        .isEmpty()) {
-      throw new IllegalRequestException("StudentsCoursesList",
-          "受講生コースのリストがnullまたは空です。");
-    }
-
-    if (!service.updateStudentInfo(studentDetail)) {
-      throw new IllegalRequestException("Student or StudentCourse",
-          "受講生情報を更新できませんでした。");
-    }
+    service.updateStudentInfo(studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
     return ResponseEntity.status(HttpStatus.OK).body(successDTO);

@@ -29,14 +29,10 @@ public class StudentService {
   }
 
   @Transactional
-  public boolean registerStudentInfo(Student student, StudentCourse studentCourse) {
+  public void registerStudentInfo(Student student, StudentCourse studentCourse) {
 
     // 受講生情報をデータベースに登録
-    if (student.getName() != null && student.getNickname() != null && student.getEmail() != null) {
-      repository.registerStudent(student);
-    } else {
-      return false;
-    }
+    repository.registerStudent(student);
 
     // 受講生コース情報の必要な値を設定
     studentCourse.setStudentId(student.getId());    // 受講生のIDを受講生コース情報に代入
@@ -44,28 +40,17 @@ public class StudentService {
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
 
     // 受講生コース情報をデータベースに登録
-    if (studentCourse.getCourseName() != null) {
-      repository.registerStudentCourse(studentCourse);
-    } else {
-      return false;
-    }
+    repository.registerStudentCourse(studentCourse);
 
-    return true;
   }
 
   @Transactional
-  public boolean updateStudentInfo(StudentDetail studentDetail) {
+  public void updateStudentInfo(StudentDetail studentDetail) {
 
-    if (repository.searchStudent(studentDetail.getStudent().getId()) != null) {
-      repository.updateStudent(studentDetail.getStudent());
-      for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
-        repository.updateStudentCourse(studentCourse);
-      }
-      return true;
-    } else {
-      return false;
+    repository.updateStudent(studentDetail.getStudent());
+    for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
+      repository.updateStudentCourse(studentCourse);
     }
-
 
   }
 
