@@ -1,7 +1,6 @@
 package raisetech.StudentManagement.controller;
 
 import jakarta.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
@@ -50,20 +48,18 @@ public class StudentController {
   }
 
   @PostMapping("/students")
-  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
+  public ResponseEntity<SuccessDTO> registerStudent(
+      @RequestBody @Valid StudentDetail studentDetail) {
 
     service.registerStudentInfo(studentDetail);
 
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-        .buildAndExpand(studentDetail.getStudent().getId()).toUri();
-
     SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
-    return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(successDTO);
 
   }
 
   @PutMapping("/students/{id}")
-  public ResponseEntity<Object> updateStudent(
+  public ResponseEntity<SuccessDTO> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
     studentDetail.getStudent().setId(id);
