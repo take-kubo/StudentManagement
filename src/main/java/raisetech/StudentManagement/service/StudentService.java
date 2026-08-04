@@ -29,18 +29,21 @@ public class StudentService {
   }
 
   @Transactional
-  public void registerStudentInfo(Student student, StudentCourse studentCourse) {
+  public void registerStudentInfo(StudentDetail studentDetail) {
 
     // 受講生情報をデータベースに登録
-    repository.registerStudent(student);
+    repository.registerStudent(studentDetail.getStudent());
 
     // 受講生コース情報の必要な値を設定
-    studentCourse.setStudentId(student.getId());    // 受講生のIDを受講生コース情報に代入
-    studentCourse.setCourseStartAt(LocalDateTime.now());    // 受講開始日（＝登録日）を代入
-    studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
+    studentDetail.getStudentsCourses().getFirst()
+        .setStudentId(studentDetail.getStudent().getId());    // 受講生のIDを受講生コース情報に代入
+    studentDetail.getStudentsCourses().getFirst()
+        .setCourseStartAt(LocalDateTime.now());    // 受講開始日（＝登録日）を代入
+    studentDetail.getStudentsCourses().getFirst()
+        .setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
 
     // 受講生コース情報をデータベースに登録
-    repository.registerStudentCourse(studentCourse);
+    repository.registerStudentCourse(studentDetail.getStudentsCourses().getFirst());
 
   }
 
@@ -48,6 +51,7 @@ public class StudentService {
   public void updateStudentInfo(StudentDetail studentDetail) {
 
     repository.updateStudent(studentDetail.getStudent());
+
     for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
       repository.updateStudentCourse(studentCourse);
     }
