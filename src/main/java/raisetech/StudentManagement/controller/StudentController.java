@@ -47,11 +47,11 @@ public class StudentController {
   @PostMapping("/students")
   public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
-    service.registerStudentInfo(studentDetail.getStudent(),
-        studentDetail.getStudentsCourses().get(0));
+    service.registerStudentInfo(studentDetail);
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(studentDetail.getStudent().getId()).toUri();
+
     SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
     return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
 
