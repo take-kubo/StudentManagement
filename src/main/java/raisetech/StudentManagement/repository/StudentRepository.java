@@ -22,6 +22,9 @@ public interface StudentRepository {
   @Select("SELECT * FROM students WHERE id = #{id} AND deleted = false")
   Student searchStudent(@Param("id") String id);
 
+  @Select("Select * From students_courses WHERE student_id = #{studentId}")
+  List<StudentCourse> searchStudentCourses(@Param("studentId") String studentId);
+
   @Insert({
       "INSERT INTO students(id, name, furigana, nickname, email, address, age, gender, remark, deleted)",
       "VALUES(#{student.id}, #{student.name}, #{student.furigana}, #{student.nickname}, #{student.email}, "

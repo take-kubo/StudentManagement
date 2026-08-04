@@ -32,6 +32,11 @@ public class StudentController {
     this.converter = converter;
   }
 
+  @GetMapping("/students/{id}")
+  public StudentDetail getStudent(@PathVariable String id) {
+    return service.searchStudent(id);
+  }
+
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     List<Student> students = service.searchStudentList();
