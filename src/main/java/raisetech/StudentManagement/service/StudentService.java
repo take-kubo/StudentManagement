@@ -10,6 +10,12 @@ import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.repository.StudentRepository;
 
+/**
+ * 受講生情報を取り扱うサービスです。
+ * 受講生の検索や登録、更新処理を行います。
+ *
+ */
+
 @Service
 public class StudentService {
 
@@ -20,6 +26,13 @@ public class StudentService {
     this.repository = repository;
   }
 
+  /**
+   * 受講生検索です。
+   * IDに紐づく受講生情報を取得したあと、その受講生に紐づく受講生コース情報を取得します。
+   *
+   * @param id 受講生ID
+   * @return 受講生
+   */
   public StudentDetail searchStudent(String id) {
     Student student = repository.searchStudent(id);
     List<StudentCourse> studentCourses = repository.searchStudentCourses(student.getId());
@@ -29,6 +42,12 @@ public class StudentService {
     return studentDetail;
   }
 
+  /**
+   * 受講生一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生一覧（全件）
+   */
   public List<Student> searchStudentList() {
     return repository.searchStudents();
   }

@@ -18,6 +18,9 @@ import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 
+/**
+ * 受講生の検索や登録、更新などを行うRest APIとして受け付けるControllerです。
+ */
 @RestController
 public class StudentController {
 
@@ -30,11 +33,24 @@ public class StudentController {
     this.converter = converter;
   }
 
+  /**
+   * 受講生検索です。
+   * IDに紐づく任意の受講生の情報を取得します。
+   *
+   * @param id 受講生ID
+   * @return 受講生
+   */
   @GetMapping("/students/{id}")
   public StudentDetail getStudent(@PathVariable String id) {
     return service.searchStudent(id);
   }
 
+  /**
+   * 受講生一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生一覧（全件）
+   */
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     List<Student> students = service.searchStudentList();

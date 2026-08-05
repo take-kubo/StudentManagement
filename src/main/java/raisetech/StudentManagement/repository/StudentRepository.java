@@ -10,18 +10,44 @@ import org.apache.ibatis.annotations.Update;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 
+/**
+ * 受講生テーブルと受講生コース情報テーブルと紐づくRepositoryです。
+ */
 @Mapper
 public interface StudentRepository {
+
+  /**
+   * 受講生の全件検索を行います
+   *
+   * @return 受講生一覧（全件）
+   */
 
   @Select("SELECT * FROM students WHERE deleted = false")
   List<Student> searchStudents();
 
+  /**
+   * 受講生のコース情報の全件検索です。
+   *
+   * @return 受講生コース情報（全件）
+   */
   @Select("SELECT * FROM students_courses")
   List<StudentCourse> searchStudentsCourses();
 
+  /**
+   * 受講生の検索を行います。
+   *
+   * @param id 受講生ID
+   * @return 受講生
+   */
   @Select("SELECT * FROM students WHERE id = #{id} AND deleted = false")
   Student searchStudent(@Param("id") String id);
 
+  /**
+   * 受講生IDに紐づく受講生コース情報を検索します。
+   *
+   * @param studentId 受講生ID
+   * @return 受講生IDに紐づく受講生コース情報
+   */
   @Select("Select * From students_courses WHERE student_id = #{studentId}")
   List<StudentCourse> searchStudentCourses(@Param("studentId") String studentId);
 
