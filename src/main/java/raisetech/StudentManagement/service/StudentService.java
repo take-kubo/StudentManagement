@@ -26,7 +26,6 @@ public class StudentService {
   public StudentService(StudentRepository repository, StudentConverter converter) {
     this.repository = repository;
     this.converter = converter;
-
   }
 
   /**
@@ -39,10 +38,7 @@ public class StudentService {
   public StudentDetail searchStudent(String id) {
     Student student = repository.searchStudent(id);
     List<StudentCourse> studentCourses = repository.searchStudentCourses(student.getId());
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentsCourses(studentCourses);
-    return studentDetail;
+    return new StudentDetail(student, studentCourses);
   }
 
   /**
