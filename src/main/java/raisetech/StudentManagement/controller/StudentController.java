@@ -1,6 +1,7 @@
 package raisetech.StudentManagement.controller;
 
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
@@ -64,7 +66,13 @@ public class StudentController {
     service.registerStudentInfo(studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
-    return ResponseEntity.status(HttpStatus.CREATED).body(successDTO);
+
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        .buildAndExpand(studentDetail.getStudent().getId()).toUri();
+    
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .location(uri)
+        .body(successDTO);
 
   }
 
