@@ -71,21 +71,29 @@ public class StudentService {
    */
   @Transactional
   public void registerStudentInfo(StudentDetail studentDetail) {
+    Student student = studentDetail.getStudent();
 
     // 受講生情報をデータベースに登録
-    repository.registerStudent(studentDetail.getStudent());
-
-    // 受講生コース情報の必要な値を設定
-    studentDetail.getStudentsCourses().getFirst()
-        .setStudentId(studentDetail.getStudent().getId());    // 受講生のIDを受講生コース情報に代入
-    studentDetail.getStudentsCourses().getFirst()
-        .setCourseStartAt(LocalDateTime.now());    // 受講開始日（＝登録日）を代入
-    studentDetail.getStudentsCourses().getFirst()
-        .setCourseEndAt(LocalDateTime.now().plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
-
+    repository.registerStudent(student);
     // 受講生コース情報をデータベースに登録
-    repository.registerStudentCourse(studentDetail.getStudentsCourses().getFirst());
+    for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
+      // 受講生コース情報の必要な値を設定
+      initStudentsCourse(studentCourse, student);
+      repository.registerStudentCourse(studentDetail.getStudentsCourses().getFirst());
+    }
+  }
 
+  /**
+   *受講生コース情報を登録する際の初期情報を設定する。
+   * @param studentCourse 受講生コース情報
+   * @param student 受講生
+   */
+  private void initStudentsCourse(StudentCourse studentCourse, Student student) {
+    LocalDateTime now = LocalDateTime.now();
+
+    studentCourse.setStudentId(student.getId());      // 受講生のIDを受講生コース情報に代入
+    studentCourse.setCourseStartAt(now);              // 受講開始日（＝登録日）を代入
+    studentCourse.setCourseEndAt(now.plusYears(1));   // 受講終了予定日（＝登録日の１年後）を代入
   }
 
   /**

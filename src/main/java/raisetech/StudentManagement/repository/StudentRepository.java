@@ -21,7 +21,6 @@ public interface StudentRepository {
    *
    * @return 受講生一覧（全件）
    */
-
   @Select("SELECT * FROM students WHERE deleted = false")
   List<Student> searchStudents();
 
