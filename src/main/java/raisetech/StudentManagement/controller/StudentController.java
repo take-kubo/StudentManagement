@@ -75,7 +75,7 @@ public class StudentController {
   public ResponseEntity<SuccessDTO> registerStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
 
-    service.registerStudentInfo(studentDetail);
+    service.registerStudent(studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
 
@@ -101,7 +101,7 @@ public class StudentController {
 
     studentDetail.getStudent().setId(id);
 
-    service.updateStudentInfo(studentDetail);
+    service.updateStudent(studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
     return ResponseEntity.status(HttpStatus.OK).body(successDTO);

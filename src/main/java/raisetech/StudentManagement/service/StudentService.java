@@ -37,8 +37,8 @@ public class StudentService {
    */
   public StudentDetail searchStudent(String id) {
     Student student = repository.searchStudent(id);
-    List<StudentCourse> studentCourses = repository.searchStudentCourses(student.getId());
-    return new StudentDetail(student, studentCourses);
+    List<StudentCourse> studentCourseList = repository.searchStudentCourseListById(student.getId());
+    return new StudentDetail(student, studentCourseList);
   }
 
   /**
@@ -48,9 +48,9 @@ public class StudentService {
    * @return 受講生一覧（全件）
    */
   public List<StudentDetail> searchStudentList() {
-    List<Student> students = repository.searchStudents();
-    List<StudentCourse> studentsCourses = repository.searchStudentsCourses();
-    return converter.convertStudentDetails(students, studentsCourses);
+    List<Student> students = repository.searchStudentList();
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
   }
 
   /**
@@ -60,7 +60,7 @@ public class StudentService {
    * @return 受講生コース情報一覧（全件）
    */
   public List<StudentCourse> searchStudentsCourseList() {
-    return repository.searchStudentsCourses();
+    return repository.searchStudentCourseList();
   }
 
   /**
@@ -70,7 +70,7 @@ public class StudentService {
    * @param studentDetail　受講生詳細
    */
   @Transactional
-  public void registerStudentInfo(StudentDetail studentDetail) {
+  public void registerStudent(StudentDetail studentDetail) {
     Student student = studentDetail.getStudent();
 
     // 受講生情報をデータベースに登録
@@ -102,7 +102,7 @@ public class StudentService {
    * @param studentDetail 受講生詳細
    */
   @Transactional
-  public void updateStudentInfo(StudentDetail studentDetail) {
+  public void updateStudent(StudentDetail studentDetail) {
 
     repository.updateStudent(studentDetail.getStudent());
 
