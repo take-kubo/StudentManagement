@@ -53,10 +53,22 @@ public class StudentService {
     return converter.convertStudentDetails(students, studentsCourses);
   }
 
+  /**
+   * 受講生コース情報一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生コース情報一覧（全件）
+   */
   public List<StudentCourse> searchStudentsCourseList() {
     return repository.searchStudentsCourses();
   }
 
+  /**
+   *受講生詳細の登録を行います。
+   *受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づける値や日付情報とコース開始日、コース終了日と設定します。
+   *
+   * @param studentDetail　受講生詳細
+   */
   @Transactional
   public void registerStudentInfo(StudentDetail studentDetail) {
 
@@ -76,6 +88,11 @@ public class StudentService {
 
   }
 
+  /**
+   *受講生詳細の更新を行います。受講生と受講生コース情報をそれぞれ更新します。
+   *
+   * @param studentDetail 受講生詳細
+   */
   @Transactional
   public void updateStudentInfo(StudentDetail studentDetail) {
 

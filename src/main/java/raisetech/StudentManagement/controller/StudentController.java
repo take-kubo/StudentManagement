@@ -32,11 +32,11 @@ public class StudentController {
   }
 
   /**
-   * 受講生検索です。
+   * 受講生詳細の検索です。
    * IDに紐づく任意の受講生の情報を取得します。
    *
    * @param id 受講生ID
-   * @return 受講生
+   * @return 受講生詳細
    */
   @GetMapping("/students/{id}")
   public StudentDetail getStudent(@PathVariable String id) {
@@ -44,21 +44,33 @@ public class StudentController {
   }
 
   /**
-   * 受講生一覧検索です。
+   * 受講生詳細の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
-   * @return 受講生一覧（全件）
+   * @return 受講生詳細一覧（全件）
    */
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
   }
 
+  /**
+   * 受講生コース情報の一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生コース情報一覧（全件）
+   */
   @GetMapping("/courses")
   public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
   }
 
+  /**
+   * 受講生詳細の登録を行います。
+   *
+   * @param studentDetail 受講生詳細
+   * @return 実行結果
+   */
   @PostMapping("/students")
   public ResponseEntity<SuccessDTO> registerStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
@@ -69,13 +81,20 @@ public class StudentController {
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(studentDetail.getStudent().getId()).toUri();
-    
+
     return ResponseEntity.status(HttpStatus.CREATED)
         .location(uri)
         .body(successDTO);
 
   }
 
+  /**
+   *受講生詳細の更新を行います。キャンセルフラグの更新もここで行います（論理削除）
+   *
+   * @param id 受講生ID
+   * @param studentDetail 受講生詳細
+   * @return 実行結果
+   */
   @PutMapping("/students/{id}")
   public ResponseEntity<SuccessDTO> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {

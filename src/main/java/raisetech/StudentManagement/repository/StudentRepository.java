@@ -51,6 +51,11 @@ public interface StudentRepository {
   @Select("Select * From students_courses WHERE student_id = #{studentId}")
   List<StudentCourse> searchStudentCourses(@Param("studentId") String studentId);
 
+  /**
+   * 受講生を新規登録します。IDに関しては自動採番を行う。
+   *
+   * @param student 受講生
+   */
   @Insert({
       "INSERT INTO students(id, name, furigana, nickname, email, address, age, gender, remark, deleted)",
       "VALUES(#{student.id}, #{student.name}, #{student.furigana}, #{student.nickname}, #{student.email}, "
@@ -63,6 +68,11 @@ public interface StudentRepository {
   )
   void registerStudent(@Param("student") Student student);
 
+  /**
+   *受講生コース情報を新規登録します。IDに関しては自動採番を行う。
+   *
+   * @param studentCourse 受講生コース情報
+   */
   @Insert({
       "INSERT INTO students_courses(id, student_id, course_name, course_start_at, course_end_at)",
       "VALUES(#{studentCourse.id}, #{studentCourse.studentId}, #{studentCourse.courseName},"
@@ -75,12 +85,22 @@ public interface StudentRepository {
   )
   void registerStudentCourse(@Param("studentCourse") StudentCourse studentCourse);
 
+  /**
+   * 受講生を更新します。
+   *
+   * @param student 受講生
+   */
   @Update(
       "UPDATE students SET id=#{id}, name=#{name}, furigana=#{furigana}, nickname=#{nickname}, email=#{email},"
           + " address=#{address}, age=#{age}, gender=#{gender}, remark=#{remark}, deleted=#{deleted} "
           + "WHERE id=#{id}")
   void updateStudent(Student student);
 
+  /**
+   * 受講生コース情報のコース名を更新します。
+   *
+   * @param studentsCourses 受講生コース情報
+   */
   @Update(
       "UPDATE students_courses "
           + "SET course_name=#{courseName}, course_start_at=#{courseStartAt}, course_end_at=#{courseEndAt}"
