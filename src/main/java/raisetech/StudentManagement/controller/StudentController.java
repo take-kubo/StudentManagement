@@ -13,30 +13,45 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import raisetech.StudentManagement.controller.converter.StudentConverter;
-import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 
+/**
+ * 受講生の検索や登録、更新などを行うRest APIとして受け付けるControllerです。
+ */
 @RestController
 public class StudentController {
 
   private final StudentService service;
-  private final StudentConverter converter;
 
   @Autowired
-  public StudentController(StudentService service, StudentConverter converter) {
+  public StudentController(StudentService service) {
     this.service = service;
-    this.converter = converter;
   }
 
+  /**
+   * 受講生検索です。
+   * IDに紐づく任意の受講生の情報を取得します。
+   *
+   * @param id 受講生ID
+   * @return 受講生
+   */
+  @GetMapping("/students/{id}")
+  public StudentDetail getStudent(@PathVariable String id) {
+    return service.searchStudent(id);
+  }
+
+  /**
+   * 受講生一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生一覧（全件）
+   */
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
-    List<Student> students = service.searchStudentList();
-    List<StudentCourse> studentsCourses = service.searchStudentsCourseList();
-    return converter.convertStudentDetails(students, studentsCourses);
+    return service.searchStudentList();
   }
 
   @GetMapping("/courses")
@@ -45,20 +60,24 @@ public class StudentController {
   }
 
   @PostMapping("/students")
-  public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
+  public ResponseEntity<SuccessDTO> registerStudent(
+      @RequestBody @Valid StudentDetail studentDetail) {
 
     service.registerStudentInfo(studentDetail);
 
+    SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
+
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(studentDetail.getStudent().getId()).toUri();
-
-    SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
-    return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(successDTO);
+    
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .location(uri)
+        .body(successDTO);
 
   }
 
   @PutMapping("/students/{id}")
-  public ResponseEntity<Object> updateStudent(
+  public ResponseEntity<SuccessDTO> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
     studentDetail.getStudent().setId(id);
