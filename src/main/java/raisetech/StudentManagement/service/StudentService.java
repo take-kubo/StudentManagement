@@ -79,7 +79,7 @@ public class StudentService {
     for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
       // 受講生コース情報の必要な値を設定
       initStudentsCourse(studentCourse, student);
-      repository.registerStudentCourse(studentDetail.getStudentsCourses().getFirst());
+      repository.registerStudentCourse(studentCourse);
     }
   }
 
