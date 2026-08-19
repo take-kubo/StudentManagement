@@ -9,6 +9,7 @@ import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
 
 /**
@@ -36,7 +37,13 @@ public class StudentService {
    * @return 受講生
    */
   public StudentDetail searchStudent(String id) {
+    // IDで指定した受講生がデータベースに存在しない場合、例外を投げる
     Student student = repository.searchStudent(id);
+    if (student == null) {
+      throw new StudentNotFoundException("指定した受講生が見つかりません。");
+    }
+
+    // 受講生の検索処理
     List<StudentCourse> studentCourseList = repository.searchStudentCourseListById(student.getId());
     return new StudentDetail(student, studentCourseList);
   }
@@ -102,10 +109,16 @@ public class StudentService {
    * @param studentDetail 受講生詳細
    */
   @Transactional
-  public void updateStudent(StudentDetail studentDetail) {
+  public void updateStudent(String id, StudentDetail studentDetail) {
+    // IDで指定した受講生がデータベースに存在しない場合、例外を投げる
+    Student student = repository.searchStudent(id);
+    if (student == null) {
+      throw new StudentNotFoundException("指定した受講生が見つかりません。");
+    }
 
+    // 受講生詳細情報の更新処理
+    studentDetail.getStudent().setId(id);
     repository.updateStudent(studentDetail.getStudent());
-
     for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
       repository.updateStudentCourse(studentCourse);
     }

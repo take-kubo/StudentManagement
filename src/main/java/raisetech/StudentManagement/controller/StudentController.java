@@ -102,9 +102,7 @@ public class StudentController {
   public ResponseEntity<SuccessDTO> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
-    studentDetail.getStudent().setId(id);
-
-    service.updateStudent(studentDetail);
+    service.updateStudent(id, studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
     return ResponseEntity.status(HttpStatus.OK).body(successDTO);
