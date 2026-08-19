@@ -62,9 +62,9 @@
 
   <!-- 受講生コース情報のコース名を更新します。 -->
   <update id="updateStudentCourse">
-    "UPDATE students_courses
+    UPDATE students_courses
     SET course_name=#{courseName}, course_start_at=#{courseStartAt}, course_end_at=#{courseEndAt}
-    WHERE id=#{id}"
+    WHERE id=#{id}
   </update>
 
 </mapper>
