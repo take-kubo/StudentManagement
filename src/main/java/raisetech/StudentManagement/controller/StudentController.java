@@ -1,11 +1,13 @@
 package raisetech.StudentManagement.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,7 @@ import raisetech.StudentManagement.service.StudentService;
 /**
  * 受講生の検索や登録、更新などを行うRest APIとして受け付けるControllerです。
  */
+@Validated
 @RestController
 public class StudentController {
 
@@ -32,57 +35,74 @@ public class StudentController {
   }
 
   /**
-   * 受講生検索です。
+   * 受講生詳細の検索です。
    * IDに紐づく任意の受講生の情報を取得します。
    *
    * @param id 受講生ID
-   * @return 受講生
+   * @return 受講生詳細
    */
   @GetMapping("/students/{id}")
-  public StudentDetail getStudent(@PathVariable String id) {
+  public StudentDetail getStudent(@PathVariable @Size(min = 36, max = 36) String id) {
     return service.searchStudent(id);
   }
 
   /**
-   * 受講生一覧検索です。
+   * 受講生詳細の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
-   * @return 受講生一覧（全件）
+   * @return 受講生詳細一覧（全件）
    */
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
   }
 
+  /**
+   * 受講生コース情報の一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生コース情報一覧（全件）
+   */
   @GetMapping("/courses")
   public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
   }
 
+  /**
+   * 受講生詳細の登録を行います。
+   *
+   * @param studentDetail 受講生詳細
+   * @return 実行結果
+   */
   @PostMapping("/students")
   public ResponseEntity<SuccessDTO> registerStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
 
-    service.registerStudentInfo(studentDetail);
+    service.registerStudent(studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Register success.", studentDetail.getStudent().getId());
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(studentDetail.getStudent().getId()).toUri();
-    
+
     return ResponseEntity.status(HttpStatus.CREATED)
         .location(uri)
         .body(successDTO);
 
   }
 
+  /**
+   *受講生詳細の更新を行います。キャンセルフラグの更新もここで行います（論理削除）
+   *
+   * @param id 受講生ID
+   * @param studentDetail 受講生詳細
+   * @return 実行結果
+   */
   @PutMapping("/students/{id}")
   public ResponseEntity<SuccessDTO> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
 
-    studentDetail.getStudent().setId(id);
-
-    service.updateStudentInfo(studentDetail);
+    service.updateStudent(id, studentDetail);
 
     SuccessDTO successDTO = new SuccessDTO("Update success.", studentDetail.getStudent().getId());
     return ResponseEntity.status(HttpStatus.OK).body(successDTO);

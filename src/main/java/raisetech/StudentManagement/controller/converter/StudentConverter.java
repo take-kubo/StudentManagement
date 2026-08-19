@@ -24,29 +24,29 @@ public class StudentConverter {
    * 受講生コース情報が存在しない場合、空の受講生コース情報を使って受講生詳細情報を生成します。
    * どちらの場合でもエラーログを出力します。</p>
    *
-   * @param students 受講生情報のリスト
-   * @param studentsCourses 受講生コース情報のリスト
+   * @param studentList 受講生情報のリスト
+   * @param studentCourseList 受講生コース情報のリスト
    * @return 受講生詳細情報のリスト
    * @throws NullPointerException 受講生情報のIDがnullの場合
    */
-  public List<StudentDetail> convertStudentDetails(List<Student> students,
-      List<StudentCourse> studentsCourses) throws NullPointerException {
+  public List<StudentDetail> convertStudentDetails(List<Student> studentList,
+      List<StudentCourse> studentCourseList) throws NullPointerException {
 
     // 受講生コース情報のリストがnullでないかチェックしています
     // nullだった場合は初期化された受講生コース情報をひとつ持つリストにしています
     try {
-      Objects.requireNonNull(studentsCourses);
+      Objects.requireNonNull(studentCourseList);
     } catch (NullPointerException error) {
       log.error(
-          "The studentsCourses list is null.",
+          "The studentCourseList list is null.",
           error);
       StudentCourse emptyStudentsCourse = new StudentCourse();
-      studentsCourses = List.of(emptyStudentsCourse);
+      studentCourseList = List.of(emptyStudentsCourse);
     }
 
-    List<StudentDetail> studentDetails = new ArrayList<>();
+    List<StudentDetail> studentDetailList = new ArrayList<>();
 
-    for (Student student : students) {
+    for (Student student : studentList) {
       StudentDetail studentDetail = new StudentDetail();
       studentDetail.setStudent(student);
 
@@ -56,24 +56,24 @@ public class StudentConverter {
         Objects.requireNonNull(student.getId());
       } catch (NullPointerException error) {
         log.error(
-            "The id field of student is null. The students table in studentmanagement database includes null id.",
+            "The id field of student is null. The studentList table in studentmanagement database includes null id.",
             error);
         throw new NullPointerException();
       }
 
-      List<StudentCourse> convertStudentCourses = new ArrayList<>();
-      for (StudentCourse studentCourse : studentsCourses) {
+      List<StudentCourse> convertStudentCourseList = new ArrayList<>();
+      for (StudentCourse studentCourse : studentCourseList) {
 
         if (student.getId().equals(studentCourse.getStudentId())) {
-          convertStudentCourses.add(studentCourse);
+          convertStudentCourseList.add(studentCourse);
         }
       }
 
-      studentDetail.setStudentsCourses(convertStudentCourses);
-      studentDetails.add(studentDetail);
+      studentDetail.setStudentsCourses(convertStudentCourseList);
+      studentDetailList.add(studentDetail);
     }
 
-    return studentDetails;
+    return studentDetailList;
 
   }
 
