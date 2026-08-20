@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.TestException;
 import raisetech.StudentManagement.service.StudentService;
 
 /**
@@ -108,4 +109,11 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.OK).body(successDTO);
 
   }
+
+  @GetMapping("/testException")
+  public void getTestException() throws TestException {
+    throw new TestException(
+        "現在このAPIは利用できません。URLは「studentList」ではなく「students」を利用してください。");
+  }
+
 }
