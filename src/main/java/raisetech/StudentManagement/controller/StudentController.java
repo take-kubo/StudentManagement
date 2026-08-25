@@ -1,5 +1,6 @@
 package raisetech.StudentManagement.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.net.URI;
@@ -42,6 +43,7 @@ public class StudentController {
    * @param id 受講生ID
    * @return 受講生詳細
    */
+  @Operation(summary = "受講生検索", description = "IDによって受講生を検索します。")
   @GetMapping("/students/{id}")
   public StudentDetail getStudent(@PathVariable @Size(min = 36, max = 36) String id) {
     return service.searchStudent(id);
@@ -53,6 +55,7 @@ public class StudentController {
    *
    * @return 受講生詳細一覧（全件）
    */
+  @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。")
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
@@ -64,6 +67,7 @@ public class StudentController {
    *
    * @return 受講生コース情報一覧（全件）
    */
+  @Operation(summary = "受講生コース情報一覧検索", description = "受講生コース情報の一覧を検索します。")
   @GetMapping("/courses")
   public List<StudentCourse> getStudentsCourseList() {
     return service.searchStudentsCourseList();
@@ -75,6 +79,7 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(summary = "受講生登録", description = "受講生を登録します。")
   @PostMapping("/students")
   public ResponseEntity<SuccessDTO> registerStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
@@ -99,6 +104,7 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(summary = "受講生更新", description = "受講生詳細を更新します。")
   @PutMapping("/students/{id}")
   public ResponseEntity<SuccessDTO> updateStudent(
       @PathVariable("id") String id, @RequestBody @Valid StudentDetail studentDetail) {
@@ -110,6 +116,7 @@ public class StudentController {
 
   }
 
+  @Operation(summary = "利用不可", description = "このAPIは利用できません。アクセスするとカスタム例外を投げます。")
   @GetMapping("/testException")
   public void getTestException() throws TestException {
     throw new TestException(
