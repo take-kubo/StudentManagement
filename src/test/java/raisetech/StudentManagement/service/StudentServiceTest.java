@@ -27,7 +27,6 @@ class StudentServiceTest {
   @BeforeEach
   void before() {
     sut = new StudentService(repository, converter);
-
   }
 
   @Test
@@ -43,6 +42,16 @@ class StudentServiceTest {
     Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
     Mockito.verify(converter, Mockito.times(1))
         .convertStudentDetails(studentList, studentCourseList);
+  }
+
+  @Test
+  void 受講生コース情報の一覧検索_リポジトリの処理が適切に呼び出せていること() {
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    sut.searchStudentsCourseList();
+
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
   }
 
 }
