@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
 
@@ -98,6 +99,50 @@ class StudentServiceTest {
     // 検証
     Assertions.assertThrows(StudentNotFoundException.class,
         () -> sut.searchStudent("111111111111111111111111111111111111"));
+  }
+
+  @Test
+  void 受講生の登録_リポジトリの処理が適切に呼び出せていること() {
+    // 準備
+    Student student = new Student();
+    student.setId("111111111111111111111111111111111111");
+    student.setName("山田太郎");
+    student.setFurigana("ヤマダタロウ");
+    student.setNickname("タロウ");
+    student.setAge(36);
+    student.setAddress("東京都");
+    student.setEmail("taro@test.com");
+    student.setGender("男");
+    student.setRemark("特になし");
+    student.setDeleted(false);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.now());
+    studentCourseJava.setCourseEndAt(LocalDateTime.now());
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("111111111111111111111111111111111111");
+    studentCourseAWS.setStudentId("111111111111111111111111111111111111");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseAWS.setCourseStartAt(LocalDateTime.now());
+    studentCourseAWS.setCourseEndAt(LocalDateTime.now());
+
+    List<StudentCourse> studentCourseList = List.of(studentCourseJava, studentCourseAWS);
+
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourses(studentCourseList);
+
+    // 実行
+    sut.registerStudent(studentDetail);
+
+    // 検証
+    Mockito.verify(repository, Mockito.times(1)).registerStudent(student);
+    Mockito.verify(repository, Mockito.times(1)).registerStudentCourse(studentCourseJava);
+    Mockito.verify(repository, Mockito.times(1)).registerStudentCourse(studentCourseAWS);
   }
 
 }
