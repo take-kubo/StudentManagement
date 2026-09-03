@@ -37,7 +37,7 @@ class StudentServiceTest {
   void 受講生詳細の一覧検索_リポジトリとコンバーターの処理が適切に呼び出せていること() {
     // 事前準備
     Student student1 = new Student();
-    student1.setId("1");
+    student1.setId("111111111111111111111111111111111111");
     student1.setName("テスト太郎");
     student1.setFurigana("テストタロウ");
     student1.setNickname("テスタ");
@@ -49,7 +49,7 @@ class StudentServiceTest {
     student1.setDeleted(false);
 
     Student student2 = new Student();
-    student2.setId("2");
+    student2.setId("222222222222222222222222222222222222");
     student2.setName("テスト次郎");
     student2.setFurigana("テストジロウ");
     student2.setNickname("テスジ");
@@ -66,15 +66,15 @@ class StudentServiceTest {
     Mockito.when(repository.searchStudentList()).thenReturn(studentList);
 
     StudentCourse studentCourseJava = new StudentCourse();
-    studentCourseJava.setId("1");
-    studentCourseJava.setStudentId("1");
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
     studentCourseJava.setCourseName("Javaコース");
     studentCourseJava.setCourseStartAt(LocalDateTime.now());
     studentCourseJava.setCourseEndAt(LocalDateTime.now());
 
     StudentCourse studentCourseAWS = new StudentCourse();
-    studentCourseAWS.setId("2");
-    studentCourseAWS.setStudentId("2");
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
     studentCourseAWS.setCourseName("AWSコース");
     studentCourseAWS.setCourseStartAt(LocalDateTime.now());
     studentCourseAWS.setCourseEndAt(LocalDateTime.now());
@@ -99,6 +99,9 @@ class StudentServiceTest {
     List<StudentDetail> studentDetailList = new ArrayList<>();
     studentDetailList.add(studentDetail1);
     studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
 
     // 実行
     List<StudentDetail> expected = studentDetailList;
