@@ -168,13 +168,20 @@ class StudentServiceTest {
     studentCourse.setStudentId("1");
     studentCourse.setCourseStartAt(LocalDateTime.now());
     studentCourse.setCourseEndAt(LocalDateTime.now());
-    List<StudentCourse> studentCourseList = new ArrayList<>(List.of(studentCourse));
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourse);
     Mockito.when(repository.searchStudentCourseListById("1")).thenReturn(studentCourseList);
 
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourses(studentCourseList);
+
     // 実行
-    sut.searchStudent("1");
+    StudentDetail expected = studentDetail;
+    StudentDetail actual = sut.searchStudent("1");
 
     // 検証
+    Assertions.assertEquals(expected, actual);
     Mockito.verify(repository, Mockito.times(1)).searchStudent("1");
     Mockito.verify(repository, Mockito.times(1)).searchStudentCourseListById("1");
   }
