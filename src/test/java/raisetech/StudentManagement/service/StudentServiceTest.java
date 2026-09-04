@@ -117,11 +117,32 @@ class StudentServiceTest {
 
   @Test
   void 受講生コース情報の一覧検索_リポジトリの処理が適切に呼び出せていること() {
+    // 事前準備
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.now());
+    studentCourseJava.setCourseEndAt(LocalDateTime.now());
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseAWS.setCourseStartAt(LocalDateTime.now());
+    studentCourseAWS.setCourseEndAt(LocalDateTime.now());
+
     List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
     Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
 
-    sut.searchStudentsCourseList();
+    // 実行
+    List<StudentCourse> expected = studentCourseList;
+    List<StudentCourse> actual = sut.searchStudentsCourseList();
 
+    // 検証
+    Assertions.assertEquals(expected, actual);
     Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
   }
 
