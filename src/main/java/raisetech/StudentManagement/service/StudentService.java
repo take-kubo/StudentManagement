@@ -1,5 +1,6 @@
 package raisetech.StudentManagement.service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,8 @@ public class StudentService {
     // 受講生コース情報をデータベースに登録
     for (StudentCourse studentCourse : studentDetail.getStudentsCourses()) {
       // 受講生コース情報の必要な値を設定
-      initStudentsCourse(studentCourse, student);
+      Clock clock = Clock.systemDefaultZone();
+      initStudentsCourse(studentCourse, student, clock);
       repository.registerStudentCourse(studentCourse);
     }
   }
@@ -95,8 +97,8 @@ public class StudentService {
    * @param studentCourse 受講生コース情報
    * @param student 受講生
    */
-  private void initStudentsCourse(StudentCourse studentCourse, Student student) {
-    LocalDateTime now = LocalDateTime.now();
+  private void initStudentsCourse(StudentCourse studentCourse, Student student, Clock clock) {
+    LocalDateTime now = LocalDateTime.now(clock);
 
     studentCourse.setStudentId(student.getId());      // 受講生のIDを受講生コース情報に代入
     studentCourse.setCourseStartAt(now);              // 受講開始日（＝登録日）を代入
