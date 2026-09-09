@@ -1,6 +1,9 @@
 package raisetech.StudentManagement.service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -240,6 +243,49 @@ class StudentServiceTest {
     Mockito.verify(repository, Mockito.times(1)).registerStudentCourse(studentCourseAWS);
   }
 
+
+  @Test
+  void 受講生の登録_initStudentsCourseメソッドが正しく動作していること() {
+    // 準備
+    Student student = new Student();
+    student.setId("222222222222222222222222222222222222");
+    student.setName("山田太郎");
+    student.setFurigana("ヤマダタロウ");
+    student.setNickname("タロウ");
+    student.setAge(36);
+    student.setAddress("東京都");
+    student.setEmail("taro@test.com");
+    student.setGender("男");
+    student.setRemark("特になし");
+    student.setDeleted(false);
+
+    StudentCourse studentCourseBefore = new StudentCourse();
+    studentCourseBefore.setId("111111111111111111111111111111111111");
+    studentCourseBefore.setStudentId("111111111111111111111111111111111111");
+    studentCourseBefore.setCourseName("Javaコース");
+    studentCourseBefore.setCourseStartAt(LocalDateTime.now());
+    studentCourseBefore.setCourseEndAt(LocalDateTime.now());
+
+    Clock clock = Clock.fixed(
+        ZonedDateTime.of(2026, 9, 7, 6, 30, 0, 0, ZoneId.systemDefault()).toInstant(),
+        ZoneId.systemDefault());
+
+    StudentCourse studentCourseAfter = new StudentCourse();
+    studentCourseAfter.setId("111111111111111111111111111111111111");
+    studentCourseAfter.setStudentId("222222222222222222222222222222222222");
+    studentCourseAfter.setCourseName("Javaコース");
+    studentCourseAfter.setCourseStartAt(LocalDateTime.of(2026, 9, 7, 6, 30, 0, 0));
+    studentCourseAfter.setCourseEndAt(LocalDateTime.of(2027, 9, 7, 6, 30, 0, 0));
+
+    // 実行
+    StudentCourse expected = studentCourseAfter;
+    sut.initStudentsCourse(studentCourseBefore, student, clock);
+    StudentCourse actual = studentCourseBefore;
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+  }
+
   @Test
   void 受講生の更新_リポジトリの処理が適切に呼び出せていること() {
     // 準備
@@ -339,4 +385,5 @@ class StudentServiceTest {
     Assertions.assertThrows(StudentNotFoundException.class,
         () -> sut.updateStudent("791ea084-7d68-11f1-be12-84a93e79e4f1", studentDetail));
   }
+
 }
