@@ -28,4 +28,12 @@ class StudentControllerTest {
 
     verify(service, times(1)).searchStudentList();
   }
+
+  @Test
+  void 受講生コース情報の一覧検索が実行できてからのリストが返ってくること() throws Exception {
+    mockMvc.perform(get("/courses"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentsCourseList();
+  }
 }
