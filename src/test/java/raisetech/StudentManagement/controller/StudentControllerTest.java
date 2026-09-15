@@ -4,6 +4,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
@@ -92,5 +93,46 @@ class StudentControllerTest {
         .andExpect(status().isCreated());
 
     verify(service, times(1)).registerStudent(studentDetail);
+  }
+
+  @Test
+  void 受講生詳細の更新が実行できること() throws Exception {
+
+    Student student = new Student();
+    student.setId("111111111111111111111111111111111111");
+    student.setName("テスト太郎");
+    student.setFurigana("テストタロウ");
+    student.setNickname("テスタ");
+    student.setAge(40);
+    student.setAddress("東京都");
+    student.setEmail("testa@test.com");
+    student.setGender("男");
+    student.setRemark("特になし");
+    student.setDeleted(false);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2026, 9, 15, 19, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2026, 9, 15, 19, 0, 0));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourses(studentCourseList);
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(studentDetail);
+
+    mockMvc.perform(put("/students/111111111111111111111111111111111111")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect((status().isOk()));
+
+    verify(service, times(1)).updateStudent("111111111111111111111111111111111111", studentDetail);
+
   }
 }
