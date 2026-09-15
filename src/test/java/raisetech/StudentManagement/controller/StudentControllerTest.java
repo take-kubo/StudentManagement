@@ -36,4 +36,12 @@ class StudentControllerTest {
 
     verify(service, times(1)).searchStudentsCourseList();
   }
+
+  @Test
+  void 受講生詳細の一件検索が実行できて受講生詳細が返ってくること() throws Exception {
+    mockMvc.perform(get("/students/111111111111111111111111111111111111"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudent("111111111111111111111111111111111111");
+  }
 }
