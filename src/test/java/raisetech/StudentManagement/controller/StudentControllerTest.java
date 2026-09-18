@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -36,7 +37,12 @@ class StudentControllerTest {
   @MockitoBean
   private StudentService service;
 
-  private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  private Validator validator;
+
+  @BeforeEach
+  void before() {
+    validator = Validation.buildDefaultValidatorFactory().getValidator();
+  }
 
   @Test
   void 受講生詳細の一覧検索が実行できてからのリストが返ってくること() throws Exception {
