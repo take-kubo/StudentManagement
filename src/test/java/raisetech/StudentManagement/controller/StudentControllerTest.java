@@ -36,7 +36,7 @@ class StudentControllerTest {
   @MockitoBean
   private StudentService service;
 
-  private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
   void 受講生詳細の一覧検索が実行できてからのリストが返ってくること() throws Exception {
