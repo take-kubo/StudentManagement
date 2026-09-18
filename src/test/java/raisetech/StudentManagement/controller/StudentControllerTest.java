@@ -480,4 +480,42 @@ class StudentControllerTest {
     assertThat(violations.size()).isEqualTo(1);
     assertThat(violations).extracting("message").contains("備考は０文字以上５０００文字以下です。");
   }
+
+  @Test
+  void 受講生コース情報のコース名にnullを設定した場合入力チェックに掛かること() {
+    // 準備
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId("111111111111111111111111111111111111");
+    studentCourse.setStudentId("111111111111111111111111111111111111");
+    studentCourse.setCourseName(null);
+    studentCourse.setCourseStartAt(LocalDateTime.of(2026, 9, 15, 19, 0, 0));
+    studentCourse.setCourseEndAt(LocalDateTime.of(2026, 9, 15, 19, 0, 0));
+
+    // 実行
+    Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
+
+    // 検証
+    assertThat(violations.size()).isEqualTo(1);
+  }
+
+  @Test
+  void 受講生コース情報のコース名に５０文字以上の文字列を設定した場合入力チェックに掛かること() {
+    // 準備
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId("111111111111111111111111111111111111");
+    studentCourse.setStudentId("111111111111111111111111111111111111");
+    studentCourse.setCourseName(
+        "テストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテスト");
+    studentCourse.setCourseStartAt(LocalDateTime.of(2026, 9, 15, 19, 0, 0));
+    studentCourse.setCourseEndAt(LocalDateTime.of(2026, 9, 15, 19, 0, 0));
+
+    // 実行
+    Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
+
+    // 検証
+    assertThat(violations.size()).isEqualTo(1);
+    assertThat(violations).extracting("message").contains("コース名は０文字以上５０文字以下です。");
+
+  }
+
 }
