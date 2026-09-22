@@ -149,10 +149,6 @@ class StudentControllerTest {
 
   }
 
-  @Test
-  void name() {
-  }
-
   // 受講生に対するバリデーションのテスト
   @Test
   void 受講生に適切な値を設定した場合は入力チェックを通過すること() {
