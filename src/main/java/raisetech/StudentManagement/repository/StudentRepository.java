@@ -37,7 +37,7 @@ public interface StudentRepository {
   /**
    * 受講生コース情報の検索を行います。
    *
-   * @param id
+   * @param id 受講生コースID
    * @return 受講生コース情報
    */
   StudentCourse searchStudentCourse(@Param("id") String id);
