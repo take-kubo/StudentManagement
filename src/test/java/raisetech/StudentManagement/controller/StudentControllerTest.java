@@ -520,4 +520,12 @@ class StudentControllerTest {
 
   }
 
+  @Test
+  void 受講生コース申込状況の一覧検索が実行できてからのリストが返ってくること() throws Exception {
+    mockMvc.perform(get("/registrationStatuses"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentCourseRegistrationStatusList();
+  }
+
 }

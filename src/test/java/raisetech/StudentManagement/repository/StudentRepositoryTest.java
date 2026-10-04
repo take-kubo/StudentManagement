@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 
 @MybatisTest
 class StudentRepositoryTest {
@@ -21,12 +22,6 @@ class StudentRepositoryTest {
   @Test
   void 受講生の全件検索が行えること() {
     List<Student> actual = sut.searchStudentList();
-    assertThat(actual.size()).isEqualTo(10);
-  }
-
-  @Test
-  void 受講生コース情報の全件検索が行えること() {
-    List<StudentCourse> actual = sut.searchStudentCourseList();
     assertThat(actual.size()).isEqualTo(10);
   }
 
@@ -55,6 +50,12 @@ class StudentRepositoryTest {
     Student actual = sut.searchStudent("100");
 
     assertThat(actual).isNull();
+  }
+
+  @Test
+  void 受講生コース情報の全件検索が行えること() {
+    List<StudentCourse> actual = sut.searchStudentCourseList();
+    assertThat(actual.size()).isEqualTo(10);
   }
 
   @Test
@@ -208,4 +209,27 @@ class StudentRepositoryTest {
     assertThatThrownBy(() -> sut.updateStudentCourse(studentCourseJava)).isInstanceOf(
         DataIntegrityViolationException.class);
   }
+
+  @Test
+  void 受講生コース申込状況の全件検索() {
+    List<StudentCourseRegistrationStatus> actual = sut.searchStudentCourseRegistrationStatus();
+    assertThat(actual.size()).isEqualTo(4);
+  }
+
+  @Test
+  void 受講生コース申込状況の1件検索() {
+    // 準備
+    StudentCourseRegistrationStatus status = new StudentCourseRegistrationStatus();
+    status.setId("1");
+    status.setStudentCourseId("1");
+    status.setStatus("受講中");
+
+    // 実行
+    StudentCourseRegistrationStatus expected = status;
+    StudentCourseRegistrationStatus actual = sut.searchStudentCourseRegistrationStatusById("1");
+
+    // 検証
+    assertThat(actual).isEqualTo(expected);
+  }
+
 }

@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
@@ -386,4 +387,30 @@ class StudentServiceTest {
         () -> sut.updateStudent("791ea084-7d68-11f1-be12-84a93e79e4f1", studentDetail));
   }
 
+  @Test
+  void 受講生コース申込状況の一覧検索_リポジトリの処理が適切に呼び出せていること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    StudentCourseRegistrationStatus application = new StudentCourseRegistrationStatus();
+    application.setId("22222222-2222-2222-2222-222222222222");
+    application.setStudentCourseId("22222222-2222-2222-2222-222222222222");
+    application.setStatus("本登録");
+
+    List<StudentCourseRegistrationStatus> statusList = new ArrayList<>();
+    statusList.add(temporaryApplication);
+    statusList.add(application);
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatus()).thenReturn(statusList);
+
+    // 実行
+    List<StudentCourseRegistrationStatus> expected = statusList;
+    List<StudentCourseRegistrationStatus> actual = sut.searchStudentCourseRegistrationStatusList();
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+  }
 }
