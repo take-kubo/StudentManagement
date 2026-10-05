@@ -413,4 +413,24 @@ class StudentServiceTest {
     // 検証
     Assertions.assertEquals(expected, actual);
   }
+
+  @Test
+  void 受講生コース申込状況の一件検索_リポジトリの処理が適切に呼び出せていること() {
+    // 事前準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatusById("1"))
+        .thenReturn(temporaryApplication);
+    // 実行
+    StudentCourseRegistrationStatus expected = temporaryApplication;
+    StudentCourseRegistrationStatus actual = sut.searchStudentCourseRegistrationStatusById("1");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseRegistrationStatusById("1");
+  }
+
 }
