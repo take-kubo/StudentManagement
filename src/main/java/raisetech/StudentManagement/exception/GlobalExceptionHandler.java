@@ -21,5 +21,13 @@ public class GlobalExceptionHandler {
         .status(HttpStatus.NOT_FOUND)
         .body("指定した受講生が見つかりません。IDを確認してください。");
   }
-  
+
+  @ExceptionHandler(StudentCourseRegistrationStatusNotFoundException.class)
+  public ResponseEntity<String> studentCourseRegistrationStatusNotFoundExceptionHandler(
+      StudentCourseRegistrationStatusNotFoundException ex) {
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body("指定した受講生コース申込状況は見つかりません。IDを確認してください。");
+  }
+
 }

@@ -138,4 +138,22 @@ public class StudentService {
     return repository.searchStudentCourseRegistrationStatus();
   }
 
+  /**
+   * 受講生コース申込状況の一件検索です。
+   * IDに紐づく受講生コース申込状況を取得します。
+   *
+   * @param id 受講生コース申込状況ID
+   * @return 受講生コース状況
+   */
+  public StudentCourseRegistrationStatus searchStudentCourseRegistrationStatusById(String id) {
+
+    StudentCourseRegistrationStatus oldStatus = repository.searchStudentCourseRegistrationStatusById(
+        id);
+    if (oldStatus == null) {
+      throw new StudentCourseRegistrationStatusNotFoundException(
+          "指定したIDを持つ受講生コース申込状況は存在していません。");
+    }
+
+    return repository.searchStudentCourseRegistrationStatusById(id);
+  }
 }

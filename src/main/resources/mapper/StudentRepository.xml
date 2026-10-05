@@ -81,4 +81,12 @@
     FROM registration_status;
   </select>
 
+  <!--  受講生コース申込状況のIDによる１件検索をします。 -->
+  <select id="searchStudentCourseRegistrationStatusById"
+    resultType="raisetech.StudentManagement.domain.StudentCourseRegistrationStatus">
+    SELECT *
+    FROM registration_status
+    WHERE id=#{id};
+  </select>
+
 </mapper>

@@ -136,4 +136,17 @@ public class StudentController {
     return service.searchStudentCourseRegistrationStatusList();
   }
 
+  /**
+   * 受講生コース申込状況の一件検索です。
+   * IDに紐づく任意の受講生コース申込状況を取得します。
+   *
+   * @param id 受講生コース申込状況ID
+   * @return 受講生コース申込状況
+   */
+  @Operation(summary = "受講生コース申込状況一件検索", description = "IDによって受講生コース申込状況を検索します。")
+  @GetMapping("/registrationStatuses/{id}")
+  public StudentCourseRegistrationStatus getStudentCourseRegistrationStatus(
+      @PathVariable @Size(min = 36, max = 36) String id) {
+    return service.searchStudentCourseRegistrationStatusById(id);
+  }
 }

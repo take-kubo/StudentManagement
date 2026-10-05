@@ -86,4 +86,12 @@ public interface StudentRepository {
    */
   List<StudentCourseRegistrationStatus> searchStudentCourseRegistrationStatus();
 
+  /**
+   * 受講生コース申込状況の1件検索を行います。
+   *
+   * @param id 受講生コース申込状況ID
+   * @return 受講生コース申込状況
+   */
+  StudentCourseRegistrationStatus searchStudentCourseRegistrationStatusById(@Param("id") String id);
+
 }
