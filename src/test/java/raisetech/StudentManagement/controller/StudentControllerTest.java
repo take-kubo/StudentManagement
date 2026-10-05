@@ -528,4 +528,14 @@ class StudentControllerTest {
     verify(service, times(1)).searchStudentCourseRegistrationStatusList();
   }
 
+  @Test
+  void 受講生コース申込状況の一件検索が実行できて受講生コース申込状況が返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/registrationStatuses/11111111-1111-1111-1111-111111111111"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentCourseRegistrationStatusById(
+        "11111111-1111-1111-1111-111111111111");
+  }
+
 }
