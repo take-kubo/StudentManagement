@@ -105,4 +105,12 @@
     WHERE id=#{studentCourseRegistrationStatus.id}
   </insert>
 
+  <!--  受講生の名前による絞り込み検索です。 -->
+  <select id="searchStudentListByName"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT *
+    FROM students
+    WHERE name Like CONCAT('%', #{name},'%');
+  </select>
+
 </mapper>
