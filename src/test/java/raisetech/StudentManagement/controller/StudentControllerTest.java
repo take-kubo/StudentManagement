@@ -77,6 +77,14 @@ class StudentControllerTest {
   }
 
   @Test
+  void 受講生詳細の名前のふりがなによる絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?furigana=テス")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByFurigana("テス");
+  }
+
+  @Test
   void 受講生詳細の登録が実行できること() throws Exception {
     // 準備
     Student student = new Student();
