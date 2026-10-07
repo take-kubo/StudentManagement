@@ -77,6 +77,18 @@ public class StudentService {
   }
 
   /**
+   * 受講生の名前のふりがなで絞り込み検索です。
+   *
+   * @param furigana 受講生の名前のふりがな
+   * @return 名前のふりがなで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByFurigana(String furigana) {
+    List<Student> students = repository.searchStudentListFilteredByFurigana(furigana);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

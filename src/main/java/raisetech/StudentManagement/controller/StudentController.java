@@ -77,6 +77,19 @@ public class StudentController {
   }
 
   /**
+   * 受講生の名前のふりがなによる絞り込み検索です。
+   *
+   * @param furigana 受講生の名前のふりがな
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "名前のふりがなによる絞り込み検索検索", description = "受講生を名前のふりがなで絞り込み検索します。")
+  @GetMapping(value = "/students", params = "furigana")
+  public List<StudentDetail> getStudentDetailListFilteredByFurigana(
+      @RequestParam(required = false) String furigana) {
+    return service.searchStudentListFilteredByFurigana(furigana);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
