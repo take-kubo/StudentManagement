@@ -36,6 +36,14 @@ public interface StudentRepository {
   Student searchStudent(@Param("id") String id);
 
   /**
+   * 受講生を名前で部分一致検索をします。
+   *
+   * @param name 受講生の名前
+   * @return 受講生一覧（名前の部分一致で絞り込み）
+   */
+  List<Student> searchStudentListByName(@Param("name") String name);
+
+  /**
    * 受講生コース情報の検索を行います。
    *
    * @param id 受講生コースID

@@ -65,6 +65,18 @@ public class StudentService {
   }
 
   /**
+   * 受講生の名前での絞り込み検索です。
+   *
+   * @param name 受講生の名前
+   * @return 名前で絞り込まれた受講生詳細のリスト
+   */
+  public List<StudentDetail> searchStudentListByName(String name) {
+    List<Student> students = repository.searchStudentListByName(name);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

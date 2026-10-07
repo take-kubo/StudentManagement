@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.data.StudentCourse;
@@ -60,6 +61,19 @@ public class StudentController {
   @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
+  }
+
+  /**
+   * 受講生詳細の名前による絞り込み検索です。
+   *
+   * @param name 受講生の名前
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "名前による絞り込み検索検索", description = "受講生を名前で絞り込み検索します。")
+  @GetMapping(value = "/students", params = "name")
+  public List<StudentDetail> getStudentDetailListFilteredByName(
+      @RequestParam(required = false) String name) {
+    return service.searchStudentListByName(name);
   }
 
   /**
