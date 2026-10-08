@@ -71,6 +71,12 @@ class StudentRepositoryTest {
   }
 
   @Test
+  void 受講生のメールアドレスで絞り込み検索が行えること() {
+    List<Student> actual = sut.searchStudentListFilteredByEmail("to");
+    assertThat(actual.size()).isEqualTo(4);
+  }
+
+  @Test
   void 受講生コース情報の全件検索が行えること() {
     List<StudentCourse> actual = sut.searchStudentCourseList();
     assertThat(actual.size()).isEqualTo(10);

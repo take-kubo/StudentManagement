@@ -93,6 +93,14 @@ class StudentControllerTest {
   }
 
   @Test
+  void 受講生詳細のメールアドレスによる絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?email=tes")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByEmail("tes");
+  }
+
+  @Test
   void 受講生詳細の登録が実行できること() throws Exception {
     // 準備
     Student student = new Student();
