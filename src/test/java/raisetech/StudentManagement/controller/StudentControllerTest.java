@@ -117,6 +117,14 @@ class StudentControllerTest {
   }
 
   @Test
+  void 受講生詳細の備考による絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?remark=部")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByRemark("部");
+  }
+
+  @Test
   void 受講生詳細の登録が実行できること() throws Exception {
     // 準備
     Student student = new Student();
