@@ -148,4 +148,11 @@
     WHERE gender Like CONCAT('%', #{gender}, '%');
   </select>
 
+  <!--  受講生の備考による絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByRemark"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE remark Like CONCAT('%', #{remark}, '%');
+  </select>
+
 </mapper>
