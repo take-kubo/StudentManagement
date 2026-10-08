@@ -90,6 +90,19 @@ public class StudentController {
   }
 
   /**
+   * 受講生のニックネームによる絞り込み検索です。
+   *
+   * @param nickname 受講生のニックネーム
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "ニックネームによる絞り込み検索検索", description = "受講生をニックネームで絞り込み検索します。")
+  @GetMapping(value = "/students", params = "nickname")
+  public List<StudentDetail> getStudentDetailListFilteredByNickname(
+      @RequestParam(required = false) String nickname) {
+    return service.searchStudentListFilteredByNickname(nickname);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

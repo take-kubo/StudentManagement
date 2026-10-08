@@ -89,6 +89,19 @@ public class StudentService {
   }
 
   /**
+   * 受講生のニックネームでの絞り込み検索です。
+   *
+   * @param nickname 受講生のニックネーム
+   * @return ニックネームで絞り込まれた受講生詳細リスト
+   */
+
+  public List<StudentDetail> searchStudentListFilteredByNickname(String nickname) {
+    List<Student> students = repository.searchStudentListFilteredByNickname(nickname);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
