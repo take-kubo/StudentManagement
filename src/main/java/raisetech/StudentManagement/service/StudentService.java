@@ -94,9 +94,20 @@ public class StudentService {
    * @param nickname 受講生のニックネーム
    * @return ニックネームで絞り込まれた受講生詳細リスト
    */
-
   public List<StudentDetail> searchStudentListFilteredByNickname(String nickname) {
     List<Student> students = repository.searchStudentListFilteredByNickname(nickname);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生のメールアドレスでの絞り込み検索です。
+   *
+   * @param email 受講生のメールアドレス
+   * @return メールアドレスで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByEmail(String email) {
+    List<Student> students = repository.searchStudentListFilteredByEmail(email);
     List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
     return converter.convertStudentDetails(students, studentsCourseList);
   }

@@ -103,6 +103,19 @@ public class StudentController {
   }
 
   /**
+   * 受講生のメールアドレスによる絞り込み検索です。
+   *
+   * @param email 受講生のメールアドレス
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "メールアドレスによる絞り込み検索検索", description = "受講生をメールアドレスで絞り込み検索します。")
+  @GetMapping(value = "/students", params = "email")
+  public List<StudentDetail> getStudentDetailListFilteredByEmail(
+      @RequestParam(required = false) String email) {
+    return service.searchStudentListFilteredByEmail(email);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
