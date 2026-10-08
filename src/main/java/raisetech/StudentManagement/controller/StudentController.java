@@ -155,6 +155,21 @@ public class StudentController {
   }
 
   /**
+   * 受講生の年齢による絞り込み検索です。
+   *
+   * @param minAge 受講生の年齢範囲の上限
+   * @param maxAge 受講生の年齢範囲の下限
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "年齢による絞り込み検索検索", description = "受講生を年齢で絞り込み検索します。")
+  @GetMapping(value = "/students", params = {"minAge", "maxAge"})
+  public List<StudentDetail> getStudentDetailListFilteredByRemark(
+      @RequestParam(required = false) int minAge,
+      @RequestParam(required = false) int maxAge) {
+    return service.searchStudentListFilteredByAge(minAge, maxAge);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

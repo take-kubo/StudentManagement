@@ -149,6 +149,19 @@ public class StudentService {
   }
 
   /**
+   * 受講生の年齢での絞り込み検索です。
+   *
+   * @param minAge 受講生の年齢範囲の下限
+   * @param maxAge 受講生の年齢範囲の上限
+   * @return 備考で絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByAge(int minAge, int maxAge) {
+    List<Student> students = repository.searchStudentListFilteredByAge(minAge, maxAge);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
