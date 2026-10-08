@@ -120,4 +120,11 @@
     WHERE furigana Like CONCAT('%', #{furigana}, '%');
   </select>
 
+  <!--  受講生のニックネームによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByNickname"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE nickname Like CONCAT('%', #{nickname}, '%');
+  </select>
+
 </mapper>
