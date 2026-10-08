@@ -155,4 +155,11 @@
     WHERE remark Like CONCAT('%', #{remark}, '%');
   </select>
 
+  <!--  受講生の年齢による絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByAge"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE age BETWEEN #{minAge} AND #{maxAge};
+  </select>
+
 </mapper>

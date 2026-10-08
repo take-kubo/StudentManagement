@@ -92,6 +92,16 @@ public interface StudentRepository {
   List<Student> searchStudentListFilteredByRemark(@Param("remark") String remark);
 
   /**
+   * 受講生の年齢で絞り込み検索をします。
+   *
+   * @param minAge 年齢範囲の下限
+   * @param maxAge 年齢範囲の上限
+   * @return 受講生一覧（年齢の絞り込み検索で絞り込み）
+   */
+  List<Student> searchStudentListFilteredByAge(@Param("minAge") int minAge,
+      @Param("maxAge") int maxAge);
+
+  /**
    * 受講生コース情報の検索を行います。
    *
    * @param id 受講生コースID
