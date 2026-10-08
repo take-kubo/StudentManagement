@@ -129,6 +129,19 @@ public class StudentController {
   }
 
   /**
+   * 受講生のジェンダーによる絞り込み検索です。
+   *
+   * @param gender 受講生のジェンダー
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "ジェンダーによる絞り込み検索検索", description = "受講生をジェンダーで絞り込み検索します。")
+  @GetMapping(value = "/students", params = "gender")
+  public List<StudentDetail> getStudentDetailListFilteredByGender(
+      @RequestParam(required = false) String gender) {
+    return service.searchStudentListFilteredByGender(gender);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

@@ -125,6 +125,18 @@ public class StudentService {
   }
 
   /**
+   * 受講生のジェンダーでの絞り込み検索です。
+   *
+   * @param gender 受講生のジェンダー
+   * @return ジェンダーで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByGender(String gender) {
+    List<Student> students = repository.searchStudentListFilteredByGender(gender);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

@@ -141,4 +141,11 @@
     WHERE address Like CONCAT('%', #{address}, '%');
   </select>
 
+  <!--  受講生のジェンダーによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByGender"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE gender Like CONCAT('%', #{gender}, '%');
+  </select>
+
 </mapper>

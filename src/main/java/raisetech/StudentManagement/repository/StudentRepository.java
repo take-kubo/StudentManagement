@@ -76,6 +76,14 @@ public interface StudentRepository {
   List<Student> searchStudentListFilteredByAddress(@Param("address") String address);
 
   /**
+   * 受講生のジェンダーで部分一致検索をします。
+   *
+   * @param gender 受講生のジェンダー
+   * @return 受講生一覧（ジェンダーの部分一致で絞り込み）
+   */
+  List<Student> searchStudentListFilteredByGender(@Param("gender") String gender);
+
+  /**
    * 受講生コース情報の検索を行います。
    *
    * @param id 受講生コースID
