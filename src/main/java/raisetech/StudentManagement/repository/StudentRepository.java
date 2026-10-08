@@ -68,6 +68,14 @@ public interface StudentRepository {
   List<Student> searchStudentListFilteredByEmail(@Param("email") String email);
 
   /**
+   * 受講生の居住地域で部分一致検索をします。
+   *
+   * @param address 受講生の居住地域
+   * @return 受講生一覧（居住地域の部分一致で絞り込み）
+   */
+  List<Student> searchStudentListFilteredByAddress(@Param("address") String address);
+
+  /**
    * 受講生コース情報の検索を行います。
    *
    * @param id 受講生コースID
