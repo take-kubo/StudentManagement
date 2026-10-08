@@ -127,4 +127,11 @@
     WHERE nickname Like CONCAT('%', #{nickname}, '%');
   </select>
 
+  <!--  受講生のメールアドレスによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByEmail"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE email Like CONCAT('%', #{email}, '%');
+  </select>
+
 </mapper>

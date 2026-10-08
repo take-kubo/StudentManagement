@@ -60,6 +60,14 @@ public interface StudentRepository {
   List<Student> searchStudentListFilteredByNickname(@Param("nickname") String nickname);
 
   /**
+   * 受講生のメールアドレスで部分一致検索をします。
+   *
+   * @param email 受講生のメールアドレス
+   * @return 受講生一覧（メールアドレスの部分一致で絞り込み）
+   */
+  List<Student> searchStudentListFilteredByEmail(@Param("email") String email);
+
+  /**
    * 受講生コース情報の検索を行います。
    *
    * @param id 受講生コースID
