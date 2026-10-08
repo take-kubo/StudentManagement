@@ -116,6 +116,19 @@ public class StudentController {
   }
 
   /**
+   * 受講生の居住地域による絞り込み検索です。
+   *
+   * @param address 受講生の居住地域
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "居住地域による絞り込み検索検索", description = "受講生を居住地域で絞り込み検索します。")
+  @GetMapping(value = "/students", params = "address")
+  public List<StudentDetail> getStudentDetailListFilteredByAddress(
+      @RequestParam(required = false) String address) {
+    return service.searchStudentListFilteredByAddress(address);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

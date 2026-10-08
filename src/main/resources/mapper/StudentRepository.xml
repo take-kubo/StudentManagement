@@ -134,4 +134,11 @@
     WHERE email Like CONCAT('%', #{email}, '%');
   </select>
 
+  <!--  受講生の居住地域による絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByAddress"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE address Like CONCAT('%', #{address}, '%');
+  </select>
+
 </mapper>

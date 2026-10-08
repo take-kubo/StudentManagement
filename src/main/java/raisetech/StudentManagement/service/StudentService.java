@@ -113,6 +113,18 @@ public class StudentService {
   }
 
   /**
+   * 受講生の居住地域での絞り込み検索です。
+   *
+   * @param address 受講生の居住地域
+   * @return 居住地域で絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByAddress(String address) {
+    List<Student> students = repository.searchStudentListFilteredByAddress(address);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
