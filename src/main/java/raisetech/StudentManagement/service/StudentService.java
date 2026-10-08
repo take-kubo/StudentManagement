@@ -137,6 +137,18 @@ public class StudentService {
   }
 
   /**
+   * 受講生の備考での絞り込み検索です。
+   *
+   * @param remark 受講生の備考
+   * @return 備考で絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByRemark(String remark) {
+    List<Student> students = repository.searchStudentListFilteredByRemark(remark);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
    * 受講生コース情報一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *

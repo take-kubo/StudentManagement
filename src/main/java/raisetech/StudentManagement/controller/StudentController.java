@@ -142,6 +142,19 @@ public class StudentController {
   }
 
   /**
+   * 受講生の備考による絞り込み検索です。
+   *
+   * @param remark 受講生の備考
+   * @return 受講生詳細のリスト
+   */
+  @Operation(summary = "備考による絞り込み検索検索", description = "受講生を備考で絞り込み検索します。")
+  @GetMapping(value = "/students", params = "remark")
+  public List<StudentDetail> getStudentDetailListFilteredByRemark(
+      @RequestParam(required = false) String remark) {
+    return service.searchStudentListFilteredByRemark(remark);
+  }
+
+  /**
    * 受講生コース情報の一覧検索です。
    * 全件検索を行うので、条件指定は行いません。
    *
