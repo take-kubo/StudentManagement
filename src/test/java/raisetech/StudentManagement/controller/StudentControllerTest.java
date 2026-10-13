@@ -24,6 +24,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 import tools.jackson.databind.ObjectMapper;
@@ -538,4 +539,22 @@ class StudentControllerTest {
         "11111111-1111-1111-1111-111111111111");
   }
 
+  @Test
+  void 受講生コース申込状況の登録が実行できること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    mockMvc.perform(post("/registrationStatuses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isCreated());
+
+    verify(service, times(1)).registerStudentCourseRegistrationStatus(temporaryApplication);
+  }
 }
