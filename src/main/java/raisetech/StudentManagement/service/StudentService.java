@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
@@ -125,6 +126,16 @@ public class StudentService {
       repository.updateStudentCourse(studentCourse);
     }
 
+  }
+
+  /**
+   * 受講生コース申込状況の一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生コース申込状況の一覧（全件）
+   */
+  public List<StudentCourseRegistrationStatus> searchStudentCourseRegistrationStatusList() {
+    return repository.searchStudentCourseRegistrationStatus();
   }
 
 }

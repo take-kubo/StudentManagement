@@ -74,4 +74,11 @@
     WHERE id=#{id}
   </update>
 
+  <!--  受講生コース申込状況の全件検索をします。 -->
+  <select id="searchStudentCourseRegistrationStatus"
+    resultType="raisetech.StudentManagement.domain.StudentCourseRegistrationStatus">
+    SELECT *
+    FROM registration_status;
+  </select>
+
 </mapper>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.data.SuccessDTO;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.TestException;
 import raisetech.StudentManagement.service.StudentService;
@@ -121,6 +122,18 @@ public class StudentController {
   public void getTestException() throws TestException {
     throw new TestException(
         "現在このAPIは利用できません。URLは「studentList」ではなく「students」を利用してください。");
+  }
+
+  /**
+   * 受講生コース申込状況の一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生コーズ申込状況一覧（全件）
+   */
+  @Operation(summary = "受講生コース申込状況一覧検索", description = "受講生コース申込状況の一覧検索をします。")
+  @GetMapping("/registrationStatuses")
+  List<StudentCourseRegistrationStatus> getStudentCourseRegistrationStatusList() {
+    return service.searchStudentCourseRegistrationStatusList();
   }
 
 }
