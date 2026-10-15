@@ -89,4 +89,12 @@
     WHERE id=#{id};
   </select>
 
+  <!--  受講生コース申込状況の登録をします。-->
+  <insert id="registerStudentCourseRegistrationStatus">
+    INSERT INTO registration_status(id, student_course_id, status)
+    VALUES(#{studentCourseRegistrationStatus.id},
+    #{studentCourseRegistrationStatus.studentCourseId},
+    #{studentCourseRegistrationStatus.status})
+  </insert>
+
 </mapper>

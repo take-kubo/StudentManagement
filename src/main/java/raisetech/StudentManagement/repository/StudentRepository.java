@@ -94,4 +94,11 @@ public interface StudentRepository {
    */
   StudentCourseRegistrationStatus searchStudentCourseRegistrationStatusById(@Param("id") String id);
 
+  /**
+   * 受講生コース申込状況の登録を行います。
+   *
+   * @param studentCourseRegistrationStatus 受講生コース申込状況
+   */
+  void registerStudentCourseRegistrationStatus(
+      @Param("studentCourseRegistrationStatus") StudentCourseRegistrationStatus studentCourseRegistrationStatus);
 }

@@ -149,4 +149,29 @@ public class StudentController {
       @PathVariable @Size(min = 36, max = 36) String id) {
     return service.searchStudentCourseRegistrationStatusById(id);
   }
+
+  /**
+   * 受講生コース申込状況の登録です。
+   *
+   * @param studentCourseRegistrationStatus　受講生コース申込状況
+   * @return 実行結果
+   */
+  @Operation(summary = "受講生コース申込状況登録", description = "受講生コース申込状況を登録します。")
+  @PostMapping("/registrationStatuses")
+  public ResponseEntity<SuccessDTO> registerStudentCourseRegistrationStatus(
+      @RequestBody @Valid StudentCourseRegistrationStatus studentCourseRegistrationStatus) {
+
+    service.registerStudentCourseRegistrationStatus(studentCourseRegistrationStatus);
+
+    SuccessDTO successDTO = new SuccessDTO("Register success.",
+        studentCourseRegistrationStatus.getId());
+
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        .buildAndExpand(studentCourseRegistrationStatus.getId()).toUri();
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .location(uri)
+        .body(successDTO);
+
+  }
 }

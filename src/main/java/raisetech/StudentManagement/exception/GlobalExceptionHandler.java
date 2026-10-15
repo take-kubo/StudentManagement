@@ -22,6 +22,14 @@ public class GlobalExceptionHandler {
         .body("指定した受講生が見つかりません。IDを確認してください。");
   }
 
+  @ExceptionHandler(StudentCourseRegistrationStatusAlreadyExistsException.class)
+  public ResponseEntity<String> studentCourseRegistrationStatusAlreadyExistsExceptionHandler(
+      StudentCourseRegistrationStatusAlreadyExistsException ex) {
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body("指定した受講生コース申込状況のIDはすでに登録されています。IDを変更してください。");
+  }
+
   @ExceptionHandler(StudentCourseRegistrationStatusNotFoundException.class)
   public ResponseEntity<String> studentCourseRegistrationStatusNotFoundExceptionHandler(
       StudentCourseRegistrationStatusNotFoundException ex) {

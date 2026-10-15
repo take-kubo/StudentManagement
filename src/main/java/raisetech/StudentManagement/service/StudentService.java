@@ -10,6 +10,8 @@ import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusNotFoundException;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
 import raisetech.StudentManagement.service.converter.StudentConverter;
@@ -155,5 +157,24 @@ public class StudentService {
     }
 
     return repository.searchStudentCourseRegistrationStatusById(id);
+  }
+
+  /**
+   * 受講生コース申込状況の登録です。
+   *
+   * @param newStatus 受講生コース申込状況
+   */
+  @Transactional
+  public void registerStudentCourseRegistrationStatus(StudentCourseRegistrationStatus newStatus) {
+
+    StudentCourseRegistrationStatus oldStatus = repository.searchStudentCourseRegistrationStatusById(
+        newStatus.getId());
+
+    if (newStatus.getId().equals(oldStatus.getId())) {
+      throw new StudentCourseRegistrationStatusAlreadyExistsException(
+          "指定したIDをもつ受講生コース申込状況はすでに存在しています。");
+    }
+
+    repository.registerStudentCourseRegistrationStatus(newStatus);
   }
 }
