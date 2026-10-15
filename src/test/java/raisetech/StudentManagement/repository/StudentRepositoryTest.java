@@ -247,4 +247,21 @@ class StudentRepositoryTest {
     assertThat(actual.size()).isEqualTo(5);
   }
 
+  @Test
+  void 受講生コース申込状況の更新() {
+    // 準備
+    StudentCourseRegistrationStatus status = new StudentCourseRegistrationStatus();
+    status.setId("1");
+    status.setStudentCourseId("1");
+    status.setStatus("受講中");
+
+    // 実行
+    sut.updateStudentCourseRegistrationStatus(status);
+    StudentCourseRegistrationStatus actual = sut.searchStudentCourseRegistrationStatusById("1");
+    StudentCourseRegistrationStatus expected = status;
+
+    // 検証
+    assertThat(actual).isEqualTo(expected);
+  }
+
 }
