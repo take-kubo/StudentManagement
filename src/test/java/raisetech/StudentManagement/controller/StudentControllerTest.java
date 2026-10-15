@@ -557,4 +557,24 @@ class StudentControllerTest {
 
     verify(service, times(1)).registerStudentCourseRegistrationStatus(temporaryApplication);
   }
+
+  @Test
+  void 受講生コース申込状況の更新が実行できること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("受講終了");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    mockMvc.perform(put("/registrationStatuses/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect((status().isOk()));
+
+    verify(service, times(1)).updateStudentCourseRegistrationStatus("1", temporaryApplication);
+
+  }
 }
