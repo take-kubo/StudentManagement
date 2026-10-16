@@ -101,4 +101,13 @@ public interface StudentRepository {
    */
   void registerStudentCourseRegistrationStatus(
       @Param("studentCourseRegistrationStatus") StudentCourseRegistrationStatus studentCourseRegistrationStatus);
+
+  /**
+   * 受講生コース申込状況の更新を行います。
+   *
+   * @param studentCourseRegistrationStatus 受講生コース申込状況
+   */
+  void updateStudentCourseRegistrationStatus(
+      @Param("studentCourseRegistrationStatus") StudentCourseRegistrationStatus studentCourseRegistrationStatus);
+
 }

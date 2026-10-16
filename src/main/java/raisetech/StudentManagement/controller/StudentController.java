@@ -174,4 +174,23 @@ public class StudentController {
         .body(successDTO);
 
   }
+
+  /**
+   * 受講生コース申込状況の更新を行います。
+   *
+   * @param id 受講生コース申込状況ID
+   * @param status 受講生コース申込状況
+   * @return 実行結果
+   */
+  @Operation(summary = "受講生コース申込状況更新", description = "受講生コース申込状況を更新します。")
+  @PutMapping("/registrationStatuses/{id}")
+  public ResponseEntity<SuccessDTO> updateStudentCourseRegistrationStatus(
+      @PathVariable("id") String id, @RequestBody @Valid StudentCourseRegistrationStatus status) {
+
+    service.updateStudentCourseRegistrationStatus(id, status);
+
+    SuccessDTO successDTO = new SuccessDTO("Update success.", status.getId());
+    return ResponseEntity.status(HttpStatus.OK).body(successDTO);
+
+  }
 }

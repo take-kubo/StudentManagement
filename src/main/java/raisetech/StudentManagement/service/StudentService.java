@@ -177,4 +177,24 @@ public class StudentService {
 
     repository.registerStudentCourseRegistrationStatus(newStatus);
   }
+
+  /**
+   * 受講生コース申込状況の更新です。
+   *
+   * @param id 受講生コース申込状況ID
+   * @param newStatus 受講生コース申込状況
+   */
+  @Transactional
+  public void updateStudentCourseRegistrationStatus(String id,
+      StudentCourseRegistrationStatus newStatus) {
+
+    StudentCourseRegistrationStatus oldStatus = repository.searchStudentCourseRegistrationStatusById(
+        id);
+    if (oldStatus == null) {
+      throw new StudentCourseRegistrationStatusNotFoundException(
+          "指定した受講生コース申込状況が見つかりません");
+    }
+    repository.updateStudentCourseRegistrationStatus(newStatus);
+  }
+
 }

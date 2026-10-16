@@ -97,4 +97,12 @@
     #{studentCourseRegistrationStatus.status})
   </insert>
 
+  <!--  受講生コース申込状況を更新します。 -->
+  <insert id="updateStudentCourseRegistrationStatus">
+    UPDATE registration_status
+    SET student_course_id=#{studentCourseRegistrationStatus.studentCourseId},
+    status=#{studentCourseRegistrationStatus.status}
+    WHERE id=#{studentCourseRegistrationStatus.id}
+  </insert>
+
 </mapper>
