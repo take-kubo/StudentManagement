@@ -69,7 +69,7 @@ public class StudentController {
    * @param name 受講生の名前
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "名前による絞り込み検索検索", description = "受講生を名前で絞り込み検索します。")
+  @Operation(summary = "名前による絞り込み検索", description = "受講生を名前で絞り込み検索します。")
   @GetMapping(value = "/students", params = "name")
   public List<StudentDetail> getStudentDetailListFilteredByName(
       @RequestParam(required = false) String name) {
@@ -82,7 +82,7 @@ public class StudentController {
    * @param furigana 受講生の名前のふりがな
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "名前のふりがなによる絞り込み検索検索", description = "受講生を名前のふりがなで絞り込み検索します。")
+  @Operation(summary = "名前のふりがなによる絞り込み検索", description = "受講生を名前のふりがなで絞り込み検索します。")
   @GetMapping(value = "/students", params = "furigana")
   public List<StudentDetail> getStudentDetailListFilteredByFurigana(
       @RequestParam(required = false) String furigana) {
@@ -95,7 +95,7 @@ public class StudentController {
    * @param nickname 受講生のニックネーム
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "ニックネームによる絞り込み検索検索", description = "受講生をニックネームで絞り込み検索します。")
+  @Operation(summary = "ニックネームによる絞り込み検索", description = "受講生をニックネームで絞り込み検索します。")
   @GetMapping(value = "/students", params = "nickname")
   public List<StudentDetail> getStudentDetailListFilteredByNickname(
       @RequestParam(required = false) String nickname) {
@@ -108,7 +108,7 @@ public class StudentController {
    * @param email 受講生のメールアドレス
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "メールアドレスによる絞り込み検索検索", description = "受講生をメールアドレスで絞り込み検索します。")
+  @Operation(summary = "メールアドレスによる絞り込み検索", description = "受講生をメールアドレスで絞り込み検索します。")
   @GetMapping(value = "/students", params = "email")
   public List<StudentDetail> getStudentDetailListFilteredByEmail(
       @RequestParam(required = false) String email) {
@@ -121,7 +121,7 @@ public class StudentController {
    * @param address 受講生の居住地域
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "居住地域による絞り込み検索検索", description = "受講生を居住地域で絞り込み検索します。")
+  @Operation(summary = "居住地域による絞り込み検索", description = "受講生を居住地域で絞り込み検索します。")
   @GetMapping(value = "/students", params = "address")
   public List<StudentDetail> getStudentDetailListFilteredByAddress(
       @RequestParam(required = false) String address) {
@@ -134,7 +134,7 @@ public class StudentController {
    * @param gender 受講生のジェンダー
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "ジェンダーによる絞り込み検索検索", description = "受講生をジェンダーで絞り込み検索します。")
+  @Operation(summary = "ジェンダーによる絞り込み検索", description = "受講生をジェンダーで絞り込み検索します。")
   @GetMapping(value = "/students", params = "gender")
   public List<StudentDetail> getStudentDetailListFilteredByGender(
       @RequestParam(required = false) String gender) {
@@ -147,7 +147,7 @@ public class StudentController {
    * @param remark 受講生の備考
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "備考による絞り込み検索検索", description = "受講生を備考で絞り込み検索します。")
+  @Operation(summary = "備考による絞り込み検索", description = "受講生を備考で絞り込み検索します。")
   @GetMapping(value = "/students", params = "remark")
   public List<StudentDetail> getStudentDetailListFilteredByRemark(
       @RequestParam(required = false) String remark) {
@@ -161,7 +161,7 @@ public class StudentController {
    * @param maxAge 受講生の年齢範囲の下限
    * @return 受講生詳細のリスト
    */
-  @Operation(summary = "年齢による絞り込み検索検索", description = "受講生を年齢で絞り込み検索します。")
+  @Operation(summary = "年齢による絞り込み検索", description = "受講生を年齢で絞り込み検索します。")
   @GetMapping(value = "/students", params = {"minAge", "maxAge"})
   public List<StudentDetail> getStudentDetailListFilteredByRemark(
       @RequestParam(required = false) int minAge,
