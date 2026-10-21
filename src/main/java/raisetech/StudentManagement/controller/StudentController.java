@@ -164,8 +164,8 @@ public class StudentController {
   @Operation(summary = "年齢による絞り込み検索", description = "受講生を年齢で絞り込み検索します。")
   @GetMapping(value = "/students", params = {"minAge", "maxAge"})
   public List<StudentDetail> getStudentDetailListFilteredByAge(
-      @RequestParam(required = false) int minAge,
-      @RequestParam(required = false) int maxAge) {
+      @RequestParam(required = false) Integer minAge,
+      @RequestParam(required = false) Integer maxAge) {
     return service.searchStudentListFilteredByAge(minAge, maxAge);
   }
 

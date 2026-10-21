@@ -98,8 +98,8 @@ public interface StudentRepository {
    * @param maxAge 年齢範囲の上限
    * @return 受講生一覧（年齢の絞り込み検索で絞り込み）
    */
-  List<Student> searchStudentListFilteredByAge(@Param("minAge") int minAge,
-      @Param("maxAge") int maxAge);
+  List<Student> searchStudentListFilteredByAge(@Param("minAge") Integer minAge,
+      @Param("maxAge") Integer maxAge);
 
   /**
    * 受講生コース情報の検索を行います。

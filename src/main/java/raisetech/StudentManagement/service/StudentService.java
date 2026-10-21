@@ -155,7 +155,7 @@ public class StudentService {
    * @param maxAge 受講生の年齢範囲の上限
    * @return 備考で絞り込まれた受講生詳細リスト
    */
-  public List<StudentDetail> searchStudentListFilteredByAge(int minAge, int maxAge) {
+  public List<StudentDetail> searchStudentListFilteredByAge(Integer minAge, Integer maxAge) {
     List<Student> students = repository.searchStudentListFilteredByAge(minAge, maxAge);
     List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
     return converter.convertStudentDetails(students, studentsCourseList);
