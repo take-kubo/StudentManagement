@@ -1094,7 +1094,7 @@ class StudentServiceTest {
 
     // 検証
     Assertions.assertEquals(expected, actual);
-    Mockito.verify(repository, Mockito.times(2)).searchStudentCourseRegistrationStatusById("1");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseRegistrationStatusById("1");
   }
 
   @Test

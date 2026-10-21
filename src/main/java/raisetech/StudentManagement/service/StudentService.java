@@ -246,14 +246,14 @@ public class StudentService {
    */
   public StudentCourseRegistrationStatus searchStudentCourseRegistrationStatusById(String id) {
 
-    StudentCourseRegistrationStatus oldStatus = repository.searchStudentCourseRegistrationStatusById(
+    StudentCourseRegistrationStatus status = repository.searchStudentCourseRegistrationStatusById(
         id);
-    if (oldStatus == null) {
+    if (status == null) {
       throw new StudentCourseRegistrationStatusNotFoundException(
           "指定したIDを持つ受講生コース申込状況は存在していません。");
     }
 
-    return repository.searchStudentCourseRegistrationStatusById(id);
+    return status;
   }
 
   /**
