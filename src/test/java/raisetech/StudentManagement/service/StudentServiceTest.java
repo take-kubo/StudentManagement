@@ -15,7 +15,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusNotFoundException;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
 import raisetech.StudentManagement.service.converter.StudentConverter;
@@ -187,6 +190,670 @@ class StudentServiceTest {
     Assertions.assertEquals(expected, actual);
     Mockito.verify(repository, Mockito.times(1)).searchStudent("1");
     Mockito.verify(repository, Mockito.times(1)).searchStudentCourseListById("1");
+  }
+
+  @Test
+  void 受講生の名前による絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListByName("藤")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListByName("藤");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListByName("藤");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生の名前のふりがなによる絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByFurigana("テス")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByFurigana("テス");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByFurigana("テス");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生のニックネームによる絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByNickname("テス")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByNickname("テス");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByNickname("テス");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生のメールアドレスによる絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByEmail("tes")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByEmail("tes");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByEmail("tes");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生の居住地域による絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByAddress("京")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByAddress("京");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByAddress("京");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生のジェンダーによる絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByGender("男")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByGender("男");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByGender("男");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生の備考による絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByRemark("部")).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByRemark("部");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByRemark("部");
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
+  }
+
+  @Test
+  void 受講生の年齢による絞り込み検索_リポジトリとコンバータが適切に呼び出せていること() {
+    // 事前準備
+    Student student1 = new Student();
+    student1.setId("111111111111111111111111111111111111");
+    student1.setName("テスト藤田");
+    student1.setFurigana("テストフジタ");
+    student1.setNickname("テスタ");
+    student1.setAge(40);
+    student1.setAddress("東京都");
+    student1.setEmail("testa@test.com");
+    student1.setGender("男");
+    student1.setRemark("特になし");
+    student1.setDeleted(false);
+
+    Student student2 = new Student();
+    student2.setId("222222222222222222222222222222222222");
+    student2.setName("テスト藤尾");
+    student2.setFurigana("テスト藤尾");
+    student2.setNickname("テスジ");
+    student2.setAge(40);
+    student2.setAddress("神奈川県");
+    student2.setEmail("tesji@test.com");
+    student2.setGender("男");
+    student2.setRemark("特になし");
+    student2.setDeleted(false);
+
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student1);
+    studentList.add(student2);
+
+    Mockito.when(repository.searchStudentListFilteredByAge(40, 49)).thenReturn(studentList);
+
+    StudentCourse studentCourseJava = new StudentCourse();
+    studentCourseJava.setId("111111111111111111111111111111111111");
+    studentCourseJava.setStudentId("111111111111111111111111111111111111");
+    studentCourseJava.setCourseName("Javaコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    StudentCourse studentCourseAWS = new StudentCourse();
+    studentCourseAWS.setId("222222222222222222222222222222222222");
+    studentCourseAWS.setStudentId("222222222222222222222222222222222222");
+    studentCourseAWS.setCourseName("AWSコース");
+    studentCourseJava.setCourseStartAt(LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+    studentCourseJava.setCourseEndAt(LocalDateTime.of(2000, 12, 31, 12, 59, 59));
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourseJava);
+    studentCourseList.add(studentCourseAWS);
+
+    Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+
+    StudentDetail studentDetail1 = new StudentDetail();
+    studentDetail1.setStudent(student1);
+    List<StudentCourse> studentCourseList1 = new ArrayList<>();
+    studentCourseList1.add(studentCourseJava);
+    studentDetail1.setStudentsCourses(studentCourseList1);
+
+    StudentDetail studentDetail2 = new StudentDetail();
+    studentDetail2.setStudent(student2);
+    List<StudentCourse> studentCourseList2 = new ArrayList<>();
+    studentCourseList2.add(studentCourseAWS);
+    studentDetail2.setStudentsCourses(studentCourseList2);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    studentDetailList.add(studentDetail1);
+    studentDetailList.add(studentDetail2);
+
+    Mockito.when(converter.convertStudentDetails(studentList, studentCourseList))
+        .thenReturn(studentDetailList);
+
+    // 実行
+    List<StudentDetail> expected = studentDetailList;
+    List<StudentDetail> actual = sut.searchStudentListFilteredByAge(40, 49);
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentListFilteredByAge(40, 49);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseList();
+
   }
 
   @Test
@@ -386,4 +1053,118 @@ class StudentServiceTest {
         () -> sut.updateStudent("791ea084-7d68-11f1-be12-84a93e79e4f1", studentDetail));
   }
 
+  @Test
+  void 受講生コース申込状況の一覧検索_リポジトリの処理が適切に呼び出せていること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    StudentCourseRegistrationStatus application = new StudentCourseRegistrationStatus();
+    application.setId("22222222-2222-2222-2222-222222222222");
+    application.setStudentCourseId("22222222-2222-2222-2222-222222222222");
+    application.setStatus("本登録");
+
+    List<StudentCourseRegistrationStatus> statusList = new ArrayList<>();
+    statusList.add(temporaryApplication);
+    statusList.add(application);
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatus()).thenReturn(statusList);
+
+    // 実行
+    List<StudentCourseRegistrationStatus> expected = statusList;
+    List<StudentCourseRegistrationStatus> actual = sut.searchStudentCourseRegistrationStatusList();
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @Test
+  void 受講生コース申込状況の一件検索_リポジトリの処理が適切に呼び出せていること() {
+    // 事前準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatusById("1"))
+        .thenReturn(temporaryApplication);
+    // 実行
+    StudentCourseRegistrationStatus expected = temporaryApplication;
+    StudentCourseRegistrationStatus actual = sut.searchStudentCourseRegistrationStatusById("1");
+
+    // 検証
+    Assertions.assertEquals(expected, actual);
+    Mockito.verify(repository, Mockito.times(1)).searchStudentCourseRegistrationStatusById("1");
+  }
+
+  @Test
+  void 受講生コース申込状況の登録_リポジトリが適切に呼び出されていること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    // 実行
+    sut.registerStudentCourseRegistrationStatus(temporaryApplication);
+
+    // 検証
+    Mockito.verify(repository, Mockito.times(1))
+        .registerStudentCourseRegistrationStatus(temporaryApplication);
+  }
+
+  @Test
+  void 受講生コース申込状況の登録_データベースに登録済みのIDで新しく登録しようとした場合に適切に例外を投げること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    Mockito.when(
+            repository.searchStudentCourseRegistrationStatusById(
+                "11111111-1111-1111-1111-111111111111"))
+        .thenReturn(temporaryApplication);
+
+    // 検証
+    Assertions.assertThrows(StudentCourseRegistrationStatusAlreadyExistsException.class,
+        () -> sut.registerStudentCourseRegistrationStatus(temporaryApplication));
+
+  }
+
+  @Test
+  void 受講生コース申込状況の更新_リポジトリが適切に呼び出されていること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("仮登録");
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatusById("1"))
+        .thenReturn(temporaryApplication);
+
+    // 実行
+    sut.updateStudentCourseRegistrationStatus("1", temporaryApplication);
+
+    // 検証
+    Mockito.verify(repository, Mockito.times(1))
+        .updateStudentCourseRegistrationStatus(temporaryApplication);
+  }
+
+  @Test
+  void 受講生コース申込状況の更新_指定したIDがデータベースに存在しない場合に適切に例外を投げること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("仮登録");
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatusById("1")).thenReturn(null);
+
+    // 検証
+    Assertions.assertThrows(StudentCourseRegistrationStatusNotFoundException.class,
+        () -> sut.updateStudentCourseRegistrationStatus("1", temporaryApplication));
+  }
 }

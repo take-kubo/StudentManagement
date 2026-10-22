@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusNotFoundException;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
 import raisetech.StudentManagement.service.converter.StudentConverter;
@@ -57,6 +60,103 @@ public class StudentService {
    */
   public List<StudentDetail> searchStudentList() {
     List<Student> students = repository.searchStudentList();
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生の名前での絞り込み検索です。
+   *
+   * @param name 受講生の名前
+   * @return 名前で絞り込まれた受講生詳細のリスト
+   */
+  public List<StudentDetail> searchStudentListByName(String name) {
+    List<Student> students = repository.searchStudentListByName(name);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生の名前のふりがなで絞り込み検索です。
+   *
+   * @param furigana 受講生の名前のふりがな
+   * @return 名前のふりがなで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByFurigana(String furigana) {
+    List<Student> students = repository.searchStudentListFilteredByFurigana(furigana);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生のニックネームでの絞り込み検索です。
+   *
+   * @param nickname 受講生のニックネーム
+   * @return ニックネームで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByNickname(String nickname) {
+    List<Student> students = repository.searchStudentListFilteredByNickname(nickname);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生のメールアドレスでの絞り込み検索です。
+   *
+   * @param email 受講生のメールアドレス
+   * @return メールアドレスで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByEmail(String email) {
+    List<Student> students = repository.searchStudentListFilteredByEmail(email);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生の居住地域での絞り込み検索です。
+   *
+   * @param address 受講生の居住地域
+   * @return 居住地域で絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByAddress(String address) {
+    List<Student> students = repository.searchStudentListFilteredByAddress(address);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生のジェンダーでの絞り込み検索です。
+   *
+   * @param gender 受講生のジェンダー
+   * @return ジェンダーで絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByGender(String gender) {
+    List<Student> students = repository.searchStudentListFilteredByGender(gender);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生の備考での絞り込み検索です。
+   *
+   * @param remark 受講生の備考
+   * @return 備考で絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByRemark(String remark) {
+    List<Student> students = repository.searchStudentListFilteredByRemark(remark);
+    List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
+    return converter.convertStudentDetails(students, studentsCourseList);
+  }
+
+  /**
+   * 受講生の年齢での絞り込み検索です。
+   *
+   * @param minAge 受講生の年齢範囲の下限
+   * @param maxAge 受講生の年齢範囲の上限
+   * @return 備考で絞り込まれた受講生詳細リスト
+   */
+  public List<StudentDetail> searchStudentListFilteredByAge(Integer minAge, Integer maxAge) {
+    List<Student> students = repository.searchStudentListFilteredByAge(minAge, maxAge);
     List<StudentCourse> studentsCourseList = repository.searchStudentCourseList();
     return converter.convertStudentDetails(students, studentsCourseList);
   }
@@ -125,6 +225,73 @@ public class StudentService {
       repository.updateStudentCourse(studentCourse);
     }
 
+  }
+
+  /**
+   * 受講生コース申込状況の一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生コース申込状況の一覧（全件）
+   */
+  public List<StudentCourseRegistrationStatus> searchStudentCourseRegistrationStatusList() {
+    return repository.searchStudentCourseRegistrationStatus();
+  }
+
+  /**
+   * 受講生コース申込状況の一件検索です。
+   * IDに紐づく受講生コース申込状況を取得します。
+   *
+   * @param id 受講生コース申込状況ID
+   * @return 受講生コース状況
+   */
+  public StudentCourseRegistrationStatus searchStudentCourseRegistrationStatusById(String id) {
+
+    StudentCourseRegistrationStatus status = repository.searchStudentCourseRegistrationStatusById(
+        id);
+    if (status == null) {
+      throw new StudentCourseRegistrationStatusNotFoundException(
+          "指定したIDを持つ受講生コース申込状況は存在していません。");
+    }
+
+    return status;
+  }
+
+  /**
+   * 受講生コース申込状況の登録です。
+   *
+   * @param newStatus 受講生コース申込状況
+   */
+  @Transactional
+  public void registerStudentCourseRegistrationStatus(StudentCourseRegistrationStatus newStatus) {
+
+    StudentCourseRegistrationStatus oldStatus = repository.searchStudentCourseRegistrationStatusById(
+        newStatus.getId());
+
+    if (oldStatus != null) {
+      throw new StudentCourseRegistrationStatusAlreadyExistsException(
+          "指定したIDをもつ受講生コース申込状況はすでに存在しています。");
+    }
+
+    repository.registerStudentCourseRegistrationStatus(newStatus);
+  }
+
+  /**
+   * 受講生コース申込状況の更新です。
+   *
+   * @param id 受講生コース申込状況ID
+   * @param newStatus 受講生コース申込状況
+   */
+  @Transactional
+  public void updateStudentCourseRegistrationStatus(String id,
+      StudentCourseRegistrationStatus newStatus) {
+
+    StudentCourseRegistrationStatus oldStatus = repository.searchStudentCourseRegistrationStatusById(
+        id);
+    if (oldStatus == null) {
+      throw new StudentCourseRegistrationStatusNotFoundException(
+          "指定した受講生コース申込状況が見つかりません");
+    }
+    repository.updateStudentCourseRegistrationStatus(newStatus);
   }
 
 }

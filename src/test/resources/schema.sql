@@ -20,3 +20,10 @@ CREATE TABLE IF NOT EXISTS students_courses (
   course_end_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS registration_status (
+  id varchar(36) NOT NULL DEFAULT '',
+  student_course_id varchar(36) NOT NULL DEFAULT '',
+  status varchar(10),
+  PRIMARY KEY (id)
+);

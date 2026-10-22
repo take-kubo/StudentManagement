@@ -74,4 +74,92 @@
     WHERE id=#{id}
   </update>
 
+  <!--  受講生コース申込状況の全件検索をします。 -->
+  <select id="searchStudentCourseRegistrationStatus"
+    resultType="raisetech.StudentManagement.domain.StudentCourseRegistrationStatus">
+    SELECT *
+    FROM registration_status;
+  </select>
+
+  <!--  受講生コース申込状況のIDによる１件検索をします。 -->
+  <select id="searchStudentCourseRegistrationStatusById"
+    resultType="raisetech.StudentManagement.domain.StudentCourseRegistrationStatus">
+    SELECT *
+    FROM registration_status
+    WHERE id=#{id};
+  </select>
+
+  <!--  受講生コース申込状況の登録をします。-->
+  <insert id="registerStudentCourseRegistrationStatus">
+    INSERT INTO registration_status(id, student_course_id, status)
+    VALUES(#{studentCourseRegistrationStatus.id},
+    #{studentCourseRegistrationStatus.studentCourseId},
+    #{studentCourseRegistrationStatus.status})
+  </insert>
+
+  <!--  受講生コース申込状況を更新します。 -->
+  <update id="updateStudentCourseRegistrationStatus">
+    UPDATE registration_status
+    SET student_course_id=#{studentCourseRegistrationStatus.studentCourseId},
+    status=#{studentCourseRegistrationStatus.status}
+    WHERE id=#{studentCourseRegistrationStatus.id}
+  </update>
+
+  <!--  受講生の名前による絞り込み検索です。 -->
+  <select id="searchStudentListByName"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT *
+    FROM students
+    WHERE name Like CONCAT('%', #{name},'%');
+  </select>
+
+  <!--  受講生のフリガナによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByFurigana"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE furigana Like CONCAT('%', #{furigana}, '%');
+  </select>
+
+  <!--  受講生のニックネームによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByNickname"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE nickname Like CONCAT('%', #{nickname}, '%');
+  </select>
+
+  <!--  受講生のメールアドレスによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByEmail"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE email Like CONCAT('%', #{email}, '%');
+  </select>
+
+  <!--  受講生の居住地域による絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByAddress"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE address Like CONCAT('%', #{address}, '%');
+  </select>
+
+  <!--  受講生のジェンダーによる絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByGender"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE gender Like CONCAT('%', #{gender}, '%');
+  </select>
+
+  <!--  受講生の備考による絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByRemark"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE remark Like CONCAT('%', #{remark}, '%');
+  </select>
+
+  <!--  受講生の年齢による絞り込み検索です。 -->
+  <select id="searchStudentListFilteredByAge"
+    resultType="raisetech.StudentManagement.data.Student">
+    SELECT * FROM students
+    WHERE age BETWEEN #{minAge} AND #{maxAge};
+  </select>
+
 </mapper>

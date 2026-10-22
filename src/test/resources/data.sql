@@ -22,3 +22,8 @@ INSERT INTO students_courses (id, student_id, course_name, course_start_at, cour
   ('9',  '8',  'データベース入門',   '2026-07-01 00:00:00', '2026-09-30 23:59:59'),
   ('10', '9',  'Webデザイン基礎',    '2026-08-01 00:00:00', '2026-11-30 23:59:59');
 
+INSERT INTO registration_status (id, student_course_id, status) VALUES
+  ('1',  '1',  '受講中'),
+  ('2',  '2',  '仮登録'),
+  ('3',  '3',  '本登録'),
+  ('4',  '4',  '受講終了');

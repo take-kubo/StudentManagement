@@ -1,6 +1,7 @@
 package raisetech.StudentManagement.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,7 +25,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
+import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusNotFoundException;
 import raisetech.StudentManagement.service.StudentService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -67,6 +71,70 @@ class StudentControllerTest {
 
     verify(service, times(1)).searchStudent("111111111111111111111111111111111111");
   }
+
+  @Test
+  void 受講生詳細の名前による絞り込み検索ができてリストが返ってくること() throws Exception {
+    mockMvc.perform(get("/students?name=藤")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListByName("藤");
+  }
+
+  @Test
+  void 受講生詳細の名前のふりがなによる絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?furigana=テス")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByFurigana("テス");
+  }
+
+  @Test
+  void 受講生詳細のニックネームによる絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?nickname=テス")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByNickname("テス");
+  }
+
+  @Test
+  void 受講生詳細のメールアドレスによる絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?email=tes")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByEmail("tes");
+  }
+
+  @Test
+  void 受講生詳細の居住地域による絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?address=京")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByAddress("京");
+  }
+
+  @Test
+  void 受講生詳細のジェンダーによる絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?gender=男")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByGender("男");
+  }
+
+  @Test
+  void 受講生詳細の備考による絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?remark=部")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByRemark("部");
+  }
+
+  @Test
+  void 受講生詳細の年齢による絞り込み検索ができてリストが返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/students?minAge=40&maxAge=49")).andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentListFilteredByAge(40, 49);
+  }
+
 
   @Test
   void 受講生詳細の登録が実行できること() throws Exception {
@@ -520,4 +588,105 @@ class StudentControllerTest {
 
   }
 
+  @Test
+  void 受講生コース申込状況の一覧検索が実行できてからのリストが返ってくること() throws Exception {
+    mockMvc.perform(get("/registrationStatuses"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentCourseRegistrationStatusList();
+  }
+
+  @Test
+  void 受講生コース申込状況の一件検索が実行できて受講生コース申込状況が返ってくること()
+      throws Exception {
+    mockMvc.perform(get("/registrationStatuses/11111111-1111-1111-1111-111111111111"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentCourseRegistrationStatusById(
+        "11111111-1111-1111-1111-111111111111");
+  }
+
+  @Test
+  void 受講生コース申込状況の登録が実行できること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStudentCourseId("11111111-1111-1111-1111-111111111111");
+    temporaryApplication.setStatus("仮登録");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    mockMvc.perform(post("/registrationStatuses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isCreated());
+
+    verify(service, times(1)).registerStudentCourseRegistrationStatus(temporaryApplication);
+  }
+
+  @Test
+  void 受講生コース申込状況の登録が失敗すること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("仮登録");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    doThrow(new StudentCourseRegistrationStatusAlreadyExistsException(
+        "指定したIDをもつ受講生コース申込状況はすでに存在しています。")).when(service)
+        .registerStudentCourseRegistrationStatus(temporaryApplication);
+
+    //  検証
+    mockMvc.perform(post("/registrationStatuses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void 受講生コース申込状況の更新が実行できること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("受講終了");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    mockMvc.perform(put("/registrationStatuses/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect((status().isOk()));
+
+    verify(service, times(1)).updateStudentCourseRegistrationStatus("1", temporaryApplication);
+
+  }
+
+  @Test
+  void 受講生コース申込状況の更新が失敗すること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("受講終了");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    doThrow(new StudentCourseRegistrationStatusNotFoundException(
+        "指定したIDをもつ受講生コース申込状況は存在しません")).when(service)
+        .updateStudentCourseRegistrationStatus("1", temporaryApplication);
+
+    // 検証
+    mockMvc.perform(put("/registrationStatuses/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect((status().isNotFound()));
+
+  }
 }
