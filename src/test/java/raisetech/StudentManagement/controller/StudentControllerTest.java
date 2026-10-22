@@ -1,6 +1,7 @@
 package raisetech.StudentManagement.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,6 +27,7 @@ import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
 import raisetech.StudentManagement.service.StudentService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -620,6 +622,28 @@ class StudentControllerTest {
         .andExpect(status().isCreated());
 
     verify(service, times(1)).registerStudentCourseRegistrationStatus(temporaryApplication);
+  }
+
+  @Test
+  void 受講生コース申込状況の登録が失敗すること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("仮登録");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    doThrow(new StudentCourseRegistrationStatusAlreadyExistsException(
+        "指定したIDをもつ受講生コース申込状況はすでに存在しています。")).when(service)
+        .registerStudentCourseRegistrationStatus(temporaryApplication);
+
+    //  検証
+    mockMvc.perform(post("/registrationStatuses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
