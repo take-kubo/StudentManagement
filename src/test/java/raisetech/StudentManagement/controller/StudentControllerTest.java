@@ -28,6 +28,7 @@ import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusNotFoundException;
 import raisetech.StudentManagement.service.StudentService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -663,6 +664,29 @@ class StudentControllerTest {
         .andExpect((status().isOk()));
 
     verify(service, times(1)).updateStudentCourseRegistrationStatus("1", temporaryApplication);
+
+  }
+
+  @Test
+  void 受講生コース申込状況の更新が失敗すること() throws Exception {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("受講終了");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(temporaryApplication);
+
+    doThrow(new StudentCourseRegistrationStatusNotFoundException(
+        "指定したIDをもつ受講生コース申込状況は存在しません")).when(service)
+        .updateStudentCourseRegistrationStatus("1", temporaryApplication);
+
+    // 検証
+    mockMvc.perform(put("/registrationStatuses/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect((status().isNotFound()));
 
   }
 }

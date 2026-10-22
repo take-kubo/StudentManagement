@@ -18,6 +18,7 @@ import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentCourseRegistrationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusAlreadyExistsException;
+import raisetech.StudentManagement.exception.StudentCourseRegistrationStatusNotFoundException;
 import raisetech.StudentManagement.exception.StudentNotFoundException;
 import raisetech.StudentManagement.repository.StudentRepository;
 import raisetech.StudentManagement.service.converter.StudentConverter;
@@ -1152,4 +1153,18 @@ class StudentServiceTest {
         .updateStudentCourseRegistrationStatus(temporaryApplication);
   }
 
+  @Test
+  void 受講生コース申込状況の更新_指定したIDがデータベースに存在しない場合に適切に例外を投げること() {
+    // 準備
+    StudentCourseRegistrationStatus temporaryApplication = new StudentCourseRegistrationStatus();
+    temporaryApplication.setId("1");
+    temporaryApplication.setStudentCourseId("1");
+    temporaryApplication.setStatus("仮登録");
+
+    Mockito.when(repository.searchStudentCourseRegistrationStatusById("1")).thenReturn(null);
+
+    // 検証
+    Assertions.assertThrows(StudentCourseRegistrationStatusNotFoundException.class,
+        () -> sut.updateStudentCourseRegistrationStatus("1", temporaryApplication));
+  }
 }
